@@ -38,6 +38,11 @@ Evaluates how *alternate mandate structures* would perform compared to the curre
 
 ---
 
+**Dataset:** BBMP Grievances 2023 — 119,140 real municipal 
+complaints from Bangalore (data.opencity.in)
+
+---
+
 ## 🧠 What the System Does
 
 - Ingests historical complaint-transfer data from municipal records
@@ -172,11 +177,6 @@ Contributions are welcome! If you're working in governance analytics, public adm
 3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a Pull Request
-
----
-
-**Dataset:** BBMP Grievances 2023 — 119,140 real municipal 
-complaints from Bangalore (data.opencity.in)
 
 ---
 
