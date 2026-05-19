@@ -175,6 +175,11 @@ Contributions are welcome! If you're working in governance analytics, public adm
 
 ---
 
+**Dataset:** BBMP Grievances 2023 — 119,140 real municipal 
+complaints from Bangalore (data.opencity.in)
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
