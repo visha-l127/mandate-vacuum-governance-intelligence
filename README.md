@@ -69,6 +69,7 @@ complaints from Bangalore (data.opencity.in)
 
 | Layer | Technology |
 |-------|-----------|
+| **Frontend Dashboard** | React, TypeScript, Vite, Tailwind CSS |
 | **Data Processing** | Python, Pandas, NumPy |
 | **Statistical Modeling** | Custom metrics (Entropy, Half-Life) |
 | **Cloud Infrastructure** | Google Cloud Platform (GCP) |
@@ -133,10 +134,6 @@ mandate-vacuum-governance-intelligence/
 ├── README.md
 └── requirements.txt
 ```
-
-> ⚠️ *Directory structure may vary. Refer to actual repository layout.*
-
----
 
 ## 🚀 Getting Started
 
