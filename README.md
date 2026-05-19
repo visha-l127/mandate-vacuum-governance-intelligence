@@ -82,15 +82,56 @@ complaints from Bangalore (data.opencity.in)
 ```
 mandate-vacuum-governance-intelligence/
 │
-├── data/                    # Sample or anonymized complaint datasets
-├── analysis/                # Core analytical modules
-│   ├── ownership_entropy.py         # Entropy metric computation
-│   ├── accountability_halflife.py   # Half-life decay modeling
-│   └── counterfactual_simulator.py  # Resolution scenario simulator
-├── ingestion/               # Data ingestion and preprocessing pipelines
-├── insights/                # Gemini API integration for narrative synthesis
-├── firebase/                # Firestore read/write utilities
-└── README.md
+├── 📁 components/
+│   ├── AccountabilityAuditTerminal.tsx
+│   ├── AIoTGovernanceBlueprint.tsx
+│   ├── AdministrativeOverview.tsx
+│   ├── AnalyticsDashboard.tsx
+│   ├── CitizenPortal.tsx
+│   ├── CounterfactualSimulator.tsx
+│   ├── ExpertDrawer.tsx
+│   ├── ForensicJourneyTrace.tsx
+│   ├── GovernanceDashboard.tsx
+│   ├── GovernanceInsights.tsx
+│   ├── HowToReadPanel.tsx
+│   ├── InsightCard.tsx
+│   ├── LanguageGate.tsx
+│   ├── LiveMonitor.tsx
+│   ├── LogicExplainer.tsx
+│   ├── MandateVacuumIdentifier.tsx
+│   ├── ResponsibilityLeakageAnalyzer.tsx
+│   └── SFRASDashboard.tsx
+│
+├── 📁 notebooks/
+│   ├── 01_ownership_entropy.ipynb
+│   ├── 02_accountability_halflife.ipynb
+│   └── 03_counterfactual_simulator.ipynb
+│
+├── 📁 results/
+│   └── .gitkeep
+│
+├── 📁 sample_data/
+│   ├── sample_complaints.csv
+│   └── bbmp_complaints_cleaned.csv
+│
+├── App.tsx
+├── constants.tsx
+├── download.ts
+├── index.html
+├── index.tsx
+├── metadata.json
+├── package.json
+├── tsconfig.json
+├── types.ts
+├── vite.config.ts
+│
+├── clean_bbmp_data.py
+├── .env.example
+├── .gitignore
+├── LIMITATIONS.md
+├── METHODOLOGY.md
+├── README.md
+└── requirements.txt
 ```
 
 > ⚠️ *Directory structure may vary. Refer to actual repository layout.*
