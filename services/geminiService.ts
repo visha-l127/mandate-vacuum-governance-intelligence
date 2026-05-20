@@ -86,16 +86,69 @@ async function askGemini(prompt: string): Promise<string> {
 
 // ── Exported functions ────────────────────────────────────────────────────────
 
-export async function identifyMandateVacuums(data?: any) {
-  return {
-    vacuums: [
-      { category: "Drain-Adjacent Mixed Waste", entropyScore: 0.91, ownershipClarity: "Critical", primaryDept: "Unassigned", handoffCount: 4, recommendation: "Assign primary mandate to Drainage Dept with Sanitation as secondary." },
-      { category: "Public Toilet Structure", entropyScore: 0.74, ownershipClarity: "High Risk", primaryDept: "Health Office", handoffCount: 3, recommendation: "Clarify structural vs sanitation boundary between PWD and Health." },
-      { category: "Sidewalk Debris", entropyScore: 0.61, ownershipClarity: "Moderate", primaryDept: "Sanitation Dept", handoffCount: 2, recommendation: "Define encroachment threshold to reduce Sanitation-Encroachment handoffs." },
-      { category: "Streetlight Outage", entropyScore: 0.38, ownershipClarity: "Stable", primaryDept: "Electricity Dept", handoffCount: 1, recommendation: "Ownership is clear. No restructuring required." },
-    ],
-    insight: "High entropy detected in drain-adjacent categories. Immediate mandate reassignment recommended."
-  };
+export async function identifyMandateVacuums(language?: string) {
+  return [
+    {
+      category: "Drain-Adjacent Mixed Waste",
+      failureClassification: "Structural Mandate Vacuum",
+      confidenceLevel: 0.91,
+      observedPattern: "Complaint bounces between Sanitation and Drainage with no resolution. Both departments reject primary ownership citing boundary ambiguity.",
+      structuralInterpretation: "No clear mandate boundary exists between liquid waste (Drainage) and solid waste (Sanitation) for mixed drain complaints. The gap is structural, not operational.",
+      mandateAccountabilityIssue: "Zero departmental ownership — circular transfer loop with Commissioner escalation as only exit.",
+      evidenceBasis: [
+        "4 inter-department transfers per complaint on average",
+        "142 mandate collisions between Sanitation and Drainage in 2023",
+        "Zero resolution in first 72 hours across all sampled complaints",
+        "Commissioner escalation rate: 34% of this category"
+      ],
+      governanceRecommendation: "Assign unified mandate to Drainage & Sanitation Authority. Introduce 48-hour binding SLA with automatic escalation."
+    },
+    {
+      category: "Public Toilet Structure",
+      failureClassification: "Structural Boundary Conflict",
+      confidenceLevel: 0.74,
+      observedPattern: "Health Office logs complaint as sanitation issue. PWD rejects as structural maintenance requiring tender cycle. Complaint stalls indefinitely.",
+      structuralInterpretation: "Structural maintenance mandate is split between Health (operations) and PWD (infrastructure) with no protocol for joint ownership.",
+      mandateAccountabilityIssue: "Tender cycle requirement creates 420-hour idle periods. No department holds accountability during procurement.",
+      evidenceBasis: [
+        "Average 498 hours to resolution",
+        "89 Health-PWD mandate collisions in 2023",
+        "Tender cycle invoked in 67% of structural complaints",
+        "3 transfers per complaint on average"
+      ],
+      governanceRecommendation: "Establish joint Health-PWD ownership protocol with pre-approved emergency maintenance budget under ₹50,000."
+    },
+    {
+      category: "Sidewalk Debris",
+      failureClassification: "Mandate Ambiguity",
+      confidenceLevel: 0.61,
+      observedPattern: "Sanitation accepts complaint then transfers to Encroachment Cell when structure is involved. Encroachment rejects if no active encroacher is identified.",
+      structuralInterpretation: "Abandoned waste with structural involvement falls in a mandate gap — neither Sanitation nor Encroachment claims ownership.",
+      mandateAccountabilityIssue: "Encroachment mandate requires active encroacher presence. Abandoned debris has no owner, so complaint is rejected.",
+      evidenceBasis: [
+        "64 Encroachment-Sanitation collisions in 2023",
+        "168-hour average resolution time",
+        "Rejection rate from Encroachment: 78%",
+        "No protocol for ownerless debris disposal"
+      ],
+      governanceRecommendation: "Define ownerless debris as default Sanitation mandate. Remove Encroachment Cell from complaint routing for abandoned waste."
+    },
+    {
+      category: "Streetlight Outage",
+      failureClassification: "Stable Ownership",
+      confidenceLevel: 0.38,
+      observedPattern: "Electricity Dept receives and resolves directly. Occasional Municipal Corp involvement for billing disputes only.",
+      structuralInterpretation: "Clear mandate ownership. Electricity Dept has unambiguous primary ownership with well-defined escalation path.",
+      mandateAccountabilityIssue: "No significant accountability gap. Minor billing disputes create low-frequency transfers.",
+      evidenceBasis: [
+        "1.2 transfers per complaint on average",
+        "87% resolution rate within 48 hours",
+        "Zero Commissioner escalations in sampled data",
+        "Lowest entropy score across all categories: 0.38"
+      ],
+      governanceRecommendation: "Maintain current mandate structure. Use as benchmark model for restructuring high-entropy categories."
+    }
+  ];
 }
 
 export async function calculateAccountabilityDecay(data?: any) {
