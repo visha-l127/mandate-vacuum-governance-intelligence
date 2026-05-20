@@ -137,17 +137,29 @@ export async function auditCaseMandate(ticketId: string, data?: any) {
 }
 
 export async function getAIoTGovernanceBlueprint(ward?: string) {
-  const aiText = await askGemini(
-    `Generate a smart governance blueprint for ${ward ?? "Madurai municipal wards"} focusing on IoT-enabled complaint resolution.`
-  );
   return {
     ward: ward ?? "All Wards",
-    blueprint: aiText || "Deploy sensor nodes at high-entropy complaint zones. Automate mandate assignment using entropy scores. Trigger escalation at 48hr idle threshold.",
-    sensors: MOCK_SENSORS,
+    architecture: {
+      perception: "IoT sensors deployed at high-complaint zones — drain overflow detectors, waste bin fill-level monitors, and streetlight fault sensors.",
+      transmission: "LoRaWAN mesh network transmits sensor data every 15 minutes to the municipal cloud gateway.",
+      intelligence: "Gemini API analyzes incoming sensor streams against historical complaint patterns to flag mandate vacuum zones in real time.",
+      action: "Auto-generated work orders dispatched to primary mandate owner department with 48-hour SLA binding."
+    },
+    management: [
+      "Assign sensor maintenance mandate to Electrical Dept",
+      "Weekly data audit by Commissioner Office",
+      "Monthly entropy recalculation per ward cluster",
+      "Quarterly mandate boundary review based on sensor hotspots"
+    ],
+    risks: [
+      "Sensor vandalism in high-density zones",
+      "Mandate confusion between IoT data ownership and field action",
+      "Network dead zones in older ward infrastructure",
+      "Data latency causing stale complaint routing"
+    ],
     estimatedImprovementPct: 43,
   };
 }
-
 export async function getGovernanceKpis() {
   return MOCK_KPIs;
 }
