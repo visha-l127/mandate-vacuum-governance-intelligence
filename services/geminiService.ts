@@ -153,7 +153,34 @@ export async function getGovernanceKpis() {
 }
 
 export async function getAdvancedAnalytics() {
-  return MOCK_ANALYTICS;
+  return {
+    efficiencyScore: 82,
+    diversionRate: 34,
+    totalFinesCollected: 142500,
+    carbonReduction: "2.4 MT",
+    wardPerformance: [
+      { ward: "Ward 45 (Karisalkulam)", efficiency: 94 },
+      { ward: "Ward 12 (Ellis Nagar North)", efficiency: 87 },
+      { ward: "Ward 23 (KK Nagar)", efficiency: 79 },
+      { ward: "Ward 1 (Simmakkal)", efficiency: 71 },
+      { ward: "Ward 84 (Airport Area)", efficiency: 63 },
+    ],
+    monthlyTrend: [
+      { month: "Aug", complaints: 312, resolved: 198 },
+      { month: "Sep", complaints: 287, resolved: 201 },
+      { month: "Oct", complaints: 341, resolved: 189 },
+      { month: "Nov", complaints: 298, resolved: 221 },
+      { month: "Dec", complaints: 264, resolved: 198 },
+      { month: "Jan", complaints: 345, resolved: 196 },
+    ],
+    deptPerformance: [
+      { dept: "Sanitation", avgDays: 12, resolutionRate: 0.78 },
+      { dept: "PWD", avgDays: 21, resolutionRate: 0.61 },
+      { dept: "Health Office", avgDays: 18, resolutionRate: 0.69 },
+      { dept: "Drainage", avgDays: 31, resolutionRate: 0.44 },
+      { dept: "Electricity", avgDays: 9, resolutionRate: 0.87 },
+    ]
+  };
 }
 
 export async function generateMockIncident() {
