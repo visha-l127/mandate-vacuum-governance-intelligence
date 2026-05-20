@@ -1,235 +1,107 @@
-# 🏛️ Mandate Vacuum — Governance Intelligence System
+Mandate Vacuum
+Governance intelligence for municipal accountability failures.
+🌐 Live Dashboard  ·  📓 Methodology  ·  ⚠️ Limitations
 
-> **A policy diagnostics tool that reveals the structural roots of administrative failure in municipal complaint workflows.**
+Most civic tech tools ask: "What happened to my complaint?"
+Mandate Vacuum asks something harder: "Why does the system keep failing to answer that question?"
+This project doesn't track complaints. It studies the structural conditions that make complaints unresolvable — unclear departmental ownership, repeated inter-agency handoffs, and the slow erosion of accountability over time. It's built as a policy diagnostics tool, not a helpdesk.
+The pilot is grounded in Madurai Municipal Corporation data. The framework is designed to work with any Indian municipality that maintains complaint transfer records.
 
----
+The Problem
+A complaint gets filed. It goes to Department A. Department A transfers it to Department B. Department B sends it back. Eventually it lands in the Commissioner's office with no resolution and no clear owner.
+This isn't a staffing problem. It's a structural one — and it repeats across thousands of complaints, across dozens of categories, because the mandate boundaries between departments were never clearly defined.
+That gap is what this project maps.
 
-## 📌 Overview
+Three Core Metrics
+Ownership Entropy
+Borrowed from information theory. Measures how fragmented departmental ownership is for a given complaint category. An entropy score near 0 means one department clearly owns it. A score near 1 means ownership is completely diffused — a mandate vacuum.
+H(X) = -Σ pᵢ · log₂(pᵢ)
+H_normalized = H(X) / log₂(n)
+Accountability Half-Life
+Borrowed from nuclear physics. Models how quickly responsibility decays as a complaint transfers between departments. Every handoff accelerates the decay. A complaint with a 7-day half-life will have less than 25% accountability remaining after two weeks.
+R(t) = R₀ · e^(−λt)
+t½ = ln(2) / λ
+Counterfactual Resolution Simulator
+Answers the policy question: "If we restructured mandate ownership, what would change?" The simulator reassigns primary ownership to alternate departments and projects the resulting entropy, half-life, and resolution rate — giving decision-makers a data-backed basis for structural reform.
 
-**Mandate Vacuum** is a governance intelligence system that analyzes municipal complaint-transfer data to expose structural accountability failures between departments.
+What's Built
+A full-stack governance intelligence platform with two layers:
+Analysis layer (Python)
+Three Jupyter notebooks that run against real complaint transfer data, compute entropy and half-life metrics per category, and output the counterfactual simulation results.
+Dashboard layer (React + TypeScript)
+A bilingual (English/Tamil) governance dashboard with five modules:
 
-Unlike traditional complaint-tracking or citizen-reporting tools, Mandate Vacuum focuses on the *architecture of failure* — studying how responsibility erodes, gets transferred, and ultimately dissolves across bureaucratic structures. It is designed as a **decision-support tool for policy makers and municipal administrators** who want to move beyond symptoms and address the systemic causes of delay and unresolved complaints.
+Mandate Vacuum Identifier — entropy scores by complaint category
+Accountability Audit Terminal — half-life decay curves per complaint
+Counterfactual Simulator — interactive policy scenario comparisons
+Governance Insights — AI-synthesized structural analysis via Gemini
+Citizen Portal — ward-level performance tracking for Madurai
 
----
 
-## 🎯 Problem Statement
+Tech Stack
+LayerStackFrontendReact, TypeScript, Vite, Tailwind CSSAnalysisPython, Pandas, NumPy, SciPyAI SynthesisGoogle Gemini APIDatabaseFirebase FirestoreInfrastructureGoogle Cloud PlatformDeploymentGitHub Pages
 
-Municipal complaint systems routinely fail not because of individual negligence, but because of **structural ambiguities in mandate ownership**:
-
-- No single department clearly owns a complaint category
-- Complaints bounce between departments indefinitely
-- Accountability diffuses over time until no one is responsible
-- Decisions makers lack data-driven diagnostics to redesign these structures
-
-Mandate Vacuum directly addresses this gap.
-
----
-
-## 🔬 Core Analytical Concepts
-
-### 🌀 Ownership Entropy
-Measures the degree of *instability in mandate ownership* across departments. High entropy indicates that no single department reliably owns a complaint type — a leading indicator of systemic delay.
-
-### ⏳ Accountability Half-Life
-Quantifies how quickly *responsibility erodes* as a complaint ages and transfers between departments. A short half-life means accountability decays rapidly, and resolution becomes increasingly unlikely.
-
-### 🔁 Counterfactual Resolution Simulator
-Evaluates how *alternate mandate structures* would perform compared to the current configuration. Answers questions like: *"If Department A took primary ownership of this complaint category instead of Department B, how much faster would resolution occur?"*
-
----
-
-**Dataset:** BBMP Grievances 2023 — 119,140 real municipal 
-complaints from Bangalore (data.opencity.in)
-
----
-
-## 🧠 What the System Does
-
-- Ingests historical complaint-transfer data from municipal records
-- Detects patterns of unclear departmental ownership
-- Identifies repeated inter-department handoffs indicating mandate vacuums
-- Tracks responsibility decay over complaint lifecycle
-- Synthesizes AI-generated policy insights using Google Gemini
-- Outputs actionable diagnostics for governance redesign
-
----
-
-## 🚫 What This System Does NOT Do
-
-| ❌ Not a... | ✅ It is a... |
-|------------|--------------|
-| Complaint status tracker | Structural governance analyzer |
-| Citizen-facing reporting portal | Policy diagnostics engine |
-| Worker monitoring tool | Accountability gap detector |
-| Real-time tracking system | Historical pattern analyzer |
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Frontend Dashboard** | React, TypeScript, Vite, Tailwind CSS |
-| **Data Processing** | Python, Pandas, NumPy |
-| **Statistical Modeling** | Custom metrics (Entropy, Half-Life) |
-| **Cloud Infrastructure** | Google Cloud Platform (GCP) |
-| **Database** | Firebase Firestore |
-| **AI Insight Synthesis** | Google Gemini API |
-
----
-
-## 🗂️ Project Structure
-
-```
+Project Structure
 mandate-vacuum-governance-intelligence/
 │
-├── 📁 components/
-│   ├── AccountabilityAuditTerminal.tsx
-│   ├── AIoTGovernanceBlueprint.tsx
-│   ├── AdministrativeOverview.tsx
-│   ├── AnalyticsDashboard.tsx
-│   ├── CitizenPortal.tsx
-│   ├── CounterfactualSimulator.tsx
-│   ├── ExpertDrawer.tsx
-│   ├── ForensicJourneyTrace.tsx
-│   ├── GovernanceDashboard.tsx
-│   ├── GovernanceInsights.tsx
-│   ├── HowToReadPanel.tsx
-│   ├── InsightCard.tsx
-│   ├── LanguageGate.tsx
-│   ├── LiveMonitor.tsx
-│   ├── LogicExplainer.tsx
+├── components/                  # React dashboard modules
 │   ├── MandateVacuumIdentifier.tsx
-│   ├── ResponsibilityLeakageAnalyzer.tsx
-│   └── SFRASDashboard.tsx
+│   ├── AccountabilityAuditTerminal.tsx
+│   ├── CounterfactualSimulator.tsx
+│   ├── GovernanceInsights.tsx
+│   ├── CitizenPortal.tsx
+│   └── ...
 │
-├── 📁 notebooks/
+├── services/
+│   └── geminiService.ts         # Gemini API integration
+│
+├── notebooks/
 │   ├── 01_ownership_entropy.ipynb
 │   ├── 02_accountability_halflife.ipynb
 │   └── 03_counterfactual_simulator.ipynb
 │
-├── 📁 results/
-│   └── .gitkeep
-│
-├── 📁 sample_data/
+├── sample_data/
 │   ├── sample_complaints.csv
-│   └── bbmp_complaints_cleaned.csv
+│   └── bbmp_complaints_cleaned.csv   # 2,000 real BBMP complaints
 │
-├── App.tsx
-├── constants.tsx
-├── download.ts
-├── index.html
-├── index.tsx
-├── metadata.json
-├── package.json
-├── tsconfig.json
-├── types.ts
-├── vite.config.ts
-│
-├── clean_bbmp_data.py
-├── .env.example
-├── .gitignore
-├── LIMITATIONS.md
-├── METHODOLOGY.md
-├── README.md
+├── results/                     # Generated charts and outputs
+├── clean_bbmp_data.py           # Data pipeline script
+├── METHODOLOGY.md               # Full mathematical documentation
+├── LIMITATIONS.md               # Honest scope boundaries
 └── requirements.txt
-```
 
-## 🚀 Getting Started
+Data
+The analysis notebooks run against a cleaned dataset derived from BBMP (Bruhat Bengaluru Mahanagara Palike) 2023 grievance records — 2,000 complaints sampled from 119,140 total, covering six complaint categories across ten municipal departments.
+The dashboard is piloted on Madurai Municipal Corporation ward data, chosen because Madurai's complaint categories and departmental structure are representative of mid-sized Indian municipal bodies.
+This is not real-time data. It is recent historical data used to demonstrate the analytical framework. The methodology is designed to work with any municipality's complaint transfer records.
 
-### Prerequisites
-
-- Python 3.9+
-- Google Cloud account with Firestore enabled
-- Google Gemini API access
-- Service account credentials for GCP
-
-### Installation
-
-```bash
-git clone https://github.com/visha-l127/mandate-vacuum-governance-intelligence.git
+Running the Analysis
+bashgit clone https://github.com/visha-l127/mandate-vacuum-governance-intelligence.git
 cd mandate-vacuum-governance-intelligence
 pip install -r requirements.txt
-```
+Place your complaint data in sample_data/ following the schema in sample_complaints.csv, then run:
+bashjupyter notebook
+Open the notebooks in order. Charts are saved automatically to results/.
+For the dashboard:
+bashnpm install
+npm run dev
+Add your Gemini API key to .env (use .env.example as template) to enable live AI insight synthesis.
 
-### Configuration
+Limitations
+The model makes assumptions about how accountability decays that haven't been empirically validated against outcome data. The counterfactual simulator uses heuristic weights that should be calibrated before use in actual policy decisions.
+Full documentation of what this system cannot do is in LIMITATIONS.md. Reading it before using the outputs for any real governance decision is strongly recommended.
 
-```bash
-# Set up your GCP credentials
-export GOOGLE_APPLICATION_CREDENTIALS="path/to/your/service-account.json"
+Roadmap
 
-# Configure Gemini API Key
-export GEMINI_API_KEY="your-api-key-here"
-```
+ Run notebooks against full BBMP dataset and publish results
+ Connect Python analysis output to React dashboard (live data pipeline)
+ Multi-city comparison (Chennai, Coimbatore, Hyderabad)
+ Calibrate decay model against labelled resolution outcome data
+ Integration with data.gov.in grievance APIs
 
-### Running the Analysis
 
-```bash
-# Run the core governance analysis pipeline
-python analysis/ownership_entropy.py
+Author
+Vishal S.R — @visha-l127
+Built as an attempt to apply information theory and statistical modeling to a problem that usually gets solved with spreadsheets and intuition. Development assisted with Google AI Studio and Claude (Anthropic).
 
-# Run the counterfactual resolution simulator
-python analysis/counterfactual_simulator.py
-```
-
----
-
-## 📊 Sample Outputs
-
-The system produces:
-
-- **Ownership Entropy scores** per complaint category and department
-- **Accountability Half-Life curves** showing responsibility decay over time
-- **Counterfactual resolution tables** comparing alternate mandate structures
-- **AI-synthesized policy narratives** summarizing key structural failures and recommendations
-
----
-
-## 🎯 Target Users
-
-| User | Use Case |
-|------|----------|
-| **Municipal Administrators** | Identify which departments need clearer mandate boundaries |
-| **Policy Makers** | Redesign accountability structures with simulation support |
-| **Governance Researchers** | Study structural causes of administrative delay |
-| **Urban Planning Teams** | Evaluate departmental efficiency at scale |
-
----
-
-## 🔭 Roadmap
-
-- [ ] Interactive dashboard for entropy and half-life visualization
-- [ ] Multi-city comparative analysis support
-- [ ] Automated policy recommendation generation
-- [ ] Integration with open government data APIs
-- [ ] Longitudinal tracking of governance reforms
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you're working in governance analytics, public administration research, or civic tech, feel free to open an issue or submit a pull request.
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## 👤 Author
-
-**Vishal** — [@visha-l127](https://github.com/visha-l127)
-
-Built with a focus on structural governance analysis and data-driven public administration reform.
-
----
-
-> *"The failure isn't in the people — it's in the mandate architecture. Mandate Vacuum makes that visible."*
+The failure isn't in the people. It's in how the mandates were drawn.
