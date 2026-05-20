@@ -87,10 +87,15 @@ async function askGemini(prompt: string): Promise<string> {
 // ── Exported functions ────────────────────────────────────────────────────────
 
 export async function identifyMandateVacuums(data?: any) {
-  const aiText = await askGemini(
-    `Analyze these municipal complaint categories for mandate ownership gaps and entropy: ${JSON.stringify(data ?? MOCK_VACUUMS)}. Return a brief governance insight.`
-  );
-  return { vacuums: MOCK_VACUUMS, insight: aiText || "High entropy detected in drain-adjacent categories. Immediate mandate reassignment recommended." };
+  return {
+    vacuums: [
+      { category: "Drain-Adjacent Mixed Waste", entropyScore: 0.91, ownershipClarity: "Critical", primaryDept: "Unassigned", handoffCount: 4, recommendation: "Assign primary mandate to Drainage Dept with Sanitation as secondary." },
+      { category: "Public Toilet Structure", entropyScore: 0.74, ownershipClarity: "High Risk", primaryDept: "Health Office", handoffCount: 3, recommendation: "Clarify structural vs sanitation boundary between PWD and Health." },
+      { category: "Sidewalk Debris", entropyScore: 0.61, ownershipClarity: "Moderate", primaryDept: "Sanitation Dept", handoffCount: 2, recommendation: "Define encroachment threshold to reduce Sanitation-Encroachment handoffs." },
+      { category: "Streetlight Outage", entropyScore: 0.38, ownershipClarity: "Stable", primaryDept: "Electricity Dept", handoffCount: 1, recommendation: "Ownership is clear. No restructuring required." },
+    ],
+    insight: "High entropy detected in drain-adjacent categories. Immediate mandate reassignment recommended."
+  };
 }
 
 export async function calculateAccountabilityDecay(data?: any) {
