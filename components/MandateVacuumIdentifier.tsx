@@ -2,116 +2,117 @@ import React, { useState, useEffect } from 'react';
 import { identifyMandateVacuums } from '../services/geminiService';
 import { Language } from '../types';
 
-interface Props {
-  language: Language;
-}
+interface Props { language: Language; }
 
 const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
-  const [data, setData] = useState<any>(null);
+  const [vacuums, setVacuums] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    identifyMandateVacuums().then(setData).finally(() => setLoading(false));
-  }, []);
-
-  const t = {
-    title: language === 'ta' ? 'ஆணை வெற்றிட அடையாளங்காரி' : 'Mandate Vacuum Identifier',
-    subtitle: language === 'ta' ? 'துறை உரிமை நிலையற்ற தன்மை பகுப்பாய்வு' : 'Departmental Ownership Instability Analysis',
-    entropy: language === 'ta' ? 'என்ட்ரோபி மதிப்பெண்' : 'Entropy Score',
-    handoffs: language === 'ta' ? 'கைமாற்றுகள்' : 'Handoffs',
-    recommendation: language === 'ta' ? 'பரிந்துரை' : 'Recommendation',
-    owner: language === 'ta' ? 'முதன்மை துறை' : 'Primary Dept',
-  };
+    identifyMandateVacuums(language)
+      .then((data: any) => setVacuums(Array.isArray(data) ? data : []))
+      .catch(() => setVacuums([]))
+      .finally(() => setLoading(false));
+  }, [language]);
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center py-40">
-      <div className="w-12 h-12 border-4 border-[#9C7A3C] border-t-transparent rounded-full animate-spin mb-6"></div>
+    <div className="flex flex-col items-center justify-center py-48">
+      <div className="w-10 h-10 border-2 border-slate-900 border-t-transparent rounded-full animate-spin mb-6"></div>
       <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#6A6A6A]">
-        {language === 'ta' ? 'ஆணை வெற்றிடங்களை பகுப்பாய்கிறது...' : 'Scanning for mandate vacuums...'}
+        {language === 'ta' ? 'வெற்றிடங்களைக் கண்டறிதல்...' : 'Identifying Vacuums...'}
       </p>
     </div>
   );
 
-  if (!data) return null;
-
   return (
-    <div className="max-w-[1400px] mx-auto space-y-12 animate-in fade-in duration-700">
+    <div className="space-y-12 max-w-[1200px] mx-auto animate-in fade-in duration-1000 pb-20">
+      <header className="bg-[#1E1E1E] text-white p-10 rounded-[3rem] shadow-2xl">
+        <h3 className="text-3xl font-black tracking-tighter uppercase mb-3 text-[#9C7A3C]">
+          {language === 'ta' ? 'ஆணை வெற்றிடப் பதிவேடு' : 'Mandate Vacuum Registry'}
+        </h3>
+        <p className="text-xs font-bold text-[#6A6A6A] uppercase tracking-widest italic opacity-80">
+          {language === 'ta' ? 'தெளிவான நிர்வாக உரிமை இல்லாத புகார் வகைகளை கண்டறிதல்.' : 'Structural identification of complaint categories with zero consistent administrative ownership.'}
+        </p>
+      </header>
 
-      <div className="space-y-2 px-4">
-        <h2 className="text-4xl font-black tracking-tighter text-[#1E1E1E] uppercase">{t.title}</h2>
-        <p className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">{t.subtitle}</p>
-      </div>
-
-      {data.insight && (
-        <div className="bg-[#1E1E1E] text-[#9C7A3C] p-8 rounded-[2.5rem] border border-[#9C7A3C]/20">
-          <p className="text-sm font-bold italic leading-relaxed">{data.insight}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {data.vacuums.map((v: any, i: number) => {
-          const riskColor =
-            v.entropyScore >= 0.70 ? '#7B2D2D' :
-            v.entropyScore >= 0.40 ? '#9C7A3C' : '#1B5E20';
-
-          const riskBg =
-            v.entropyScore >= 0.70 ? 'bg-rose-50 border-rose-100' :
-            v.entropyScore >= 0.40 ? 'bg-amber-50 border-amber-100' :
-            'bg-emerald-50 border-emerald-100';
-
-          return (
-            <div key={i} className={`bg-white border rounded-[3rem] p-10 shadow-sm space-y-6 ${riskBg}`}>
-              <div className="flex justify-between items-start">
-                <h3 className="font-black text-lg text-[#1E1E1E] uppercase tracking-tight leading-tight max-w-[70%]">
-                  {v.category}
-                </h3>
-                <div className="text-right">
-                  <div className="text-3xl font-black" style={{ color: riskColor }}>
-                    {(v.entropyScore * 100).toFixed(0)}
-                  </div>
-                  <div className="text-[8px] font-black uppercase tracking-widest text-[#6A6A6A]">
-                    {t.entropy}
-                  </div>
+      <div className="space-y-10">
+        {vacuums.map((v: any, i: number) => (
+          <div key={i} className="bg-white border border-slate-100 rounded-[3rem] p-12 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-12 hover:shadow-md transition-all">
+            <div className="lg:col-span-4 space-y-4">
+              <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">
+                {language === 'ta' ? 'ஆய்வுத் துறை' : 'Analysis Domain'}
+              </div>
+              <h4 className="text-2xl font-black text-[#5A4628] uppercase tracking-tighter leading-none">{v.category}</h4>
+              <div className={`inline-block px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${
+                (v.failureClassification ?? '').includes('Structural')
+                  ? 'bg-rose-50 text-[#7B2D2D] border-[#7B2D2D]/10'
+                  : 'bg-slate-50 text-slate-400 border-slate-200'
+              }`}>
+                {v.failureClassification ?? 'Unknown'}
+              </div>
+              <div className="pt-4">
+                <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-widest opacity-40 mb-1">
+                  {language === 'ta' ? 'அனுமான நம்பிக்கை' : 'Inference Confidence'}
                 </div>
-              </div>
-
-              <div className="h-2 bg-white/60 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-1000"
-                  style={{
-                    width: `${v.entropyScore * 100}%`,
-                    backgroundColor: riskColor
-                  }}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-1">{t.owner}</div>
-                  <div className="text-xs font-black text-[#1E1E1E] uppercase">{v.primaryDept}</div>
+                <div className="text-lg font-black text-[#5A4628]">
+                  {typeof v.confidenceLevel === 'number' ? v.confidenceLevel.toFixed(2) : 'N/A'}
                 </div>
-                <div>
-                  <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-1">{t.handoffs}</div>
-                  <div className="text-xs font-black text-[#1E1E1E]">{v.handoffCount}</div>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-2xl p-6">
-                <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-2">{t.recommendation}</div>
-                <p className="text-[10px] font-bold text-[#1E1E1E] leading-relaxed">{v.recommendation}</p>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span
-                  className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-full"
-                  style={{ color: riskColor, backgroundColor: `${riskColor}15` }}
-                >
-                  {v.ownershipClarity}
-                </span>
               </div>
             </div>
-          );
-        })}
+
+            <div className="lg:col-span-8 space-y-8 border-l border-[#F4F3EE] lg:pl-16">
+              {v.observedPattern && (
+                <div className="space-y-2">
+                  <div className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.3em]">
+                    {language === 'ta' ? 'கவனிக்கப்பட்ட மாதிரி' : 'Observed Pattern'}:
+                  </div>
+                  <p className="text-base font-bold text-[#1E1E1E] leading-relaxed italic">"{v.observedPattern}"</p>
+                </div>
+              )}
+              {v.structuralInterpretation && (
+                <div className="space-y-2">
+                  <div className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.3em]">
+                    {language === 'ta' ? 'கட்டமைப்பு விளக்கம்' : 'Structural Interpretation'}:
+                  </div>
+                  <p className="text-sm font-bold text-[#1E1E1E] leading-relaxed italic opacity-90">{v.structuralInterpretation}</p>
+                </div>
+              )}
+              {v.mandateAccountabilityIssue && (
+                <div className="space-y-2">
+                  <div className="text-[10px] font-black text-[#7B2D2D] uppercase tracking-[0.3em]">
+                    {language === 'ta' ? 'ஆணை / பொறுப்புக்கூறல் சிக்கல்' : 'Mandate / Accountability Issue'}:
+                  </div>
+                  <p className="text-sm font-black text-[#7B2D2D] leading-relaxed uppercase tracking-tight">{v.mandateAccountabilityIssue}</p>
+                </div>
+              )}
+              {Array.isArray(v.evidenceBasis) && v.evidenceBasis.length > 0 && (
+                <div className="bg-[#F4F3EE]/30 p-6 rounded-3xl space-y-3">
+                  <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">
+                    {language === 'ta' ? 'ஆதார அடிப்படை' : 'Evidence Basis'}:
+                  </div>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {v.evidenceBasis.map((point: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2 text-[9px] font-bold text-[#6A6A6A] uppercase tracking-tight">
+                        <span className="w-1 h-1 rounded-full bg-[#9C7A3C] mt-1 shrink-0" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {v.governanceRecommendation && (
+                <div className="space-y-2 pt-4 border-t border-[#F4F3EE]">
+                  <div className="text-[10px] font-black text-[#9C7A3C] uppercase tracking-[0.3em]">
+                    {language === 'ta' ? 'ஆட்சிமுறை பரிந்துரை' : 'Governance Recommendation'}:
+                  </div>
+                  <div className="bg-[#F4F3EE]/50 border border-slate-100 p-6 rounded-[2rem]">
+                    <p className="text-sm font-bold text-[#5A4628] leading-relaxed uppercase tracking-tight italic">{v.governanceRecommendation}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
