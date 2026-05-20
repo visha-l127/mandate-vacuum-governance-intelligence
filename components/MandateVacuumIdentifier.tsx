@@ -1,139 +1,120 @@
-
 import React, { useState, useEffect } from 'react';
-import { getAIoTGovernanceBlueprint } from '../services/geminiService';
-import { AIoTInsight } from '../types';
+import { identifyMandateVacuums } from '../services/geminiService';
+import { Language } from '../types';
 
-const STRATEGIC_SCENARIOS = [
-  "Subterranean Mandate Audit (Drain Sensors)",
-  "Zonal Boundary Verification (Mesh Nodes)",
-  "Commercial Compliance Sentinel (Vision AI)",
-  "Biomedical Disposal Accountability (RFID Trace)"
-];
+interface Props {
+  language: Language;
+}
 
-const AIoTGovernanceBlueprint: React.FC = () => {
-  const [selectedScenario, setSelectedScenario] = useState(STRATEGIC_SCENARIOS[0]);
-  const [insight, setInsight] = useState<AIoTInsight | null>(null);
-  const [loading, setLoading] = useState(false);
+const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBlueprint(selectedScenario);
-  }, [selectedScenario]);
+    identifyMandateVacuums().then(setData).finally(() => setLoading(false));
+  }, []);
 
-  const fetchBlueprint = async (scenario: string) => {
-    setLoading(true);
-    try {
-      const res = await getAIoTGovernanceBlueprint(scenario);
-      setInsight(res);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+  const t = {
+    title: language === 'ta' ? 'ஆணை வெற்றிட அடையாளங்காரி' : 'Mandate Vacuum Identifier',
+    subtitle: language === 'ta' ? 'துறை உரிமை நிலையற்ற தன்மை பகுப்பாய்வு' : 'Departmental Ownership Instability Analysis',
+    entropy: language === 'ta' ? 'என்ட்ரோபி மதிப்பெண்' : 'Entropy Score',
+    handoffs: language === 'ta' ? 'கைமாற்றுகள்' : 'Handoffs',
+    recommendation: language === 'ta' ? 'பரிந்துரை' : 'Recommendation',
+    owner: language === 'ta' ? 'முதன்மை துறை' : 'Primary Dept',
   };
 
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center py-40">
+      <div className="w-12 h-12 border-4 border-[#9C7A3C] border-t-transparent rounded-full animate-spin mb-6"></div>
+      <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#6A6A6A]">
+        {language === 'ta' ? 'ஆணை வெற்றிடங்களை பகுப்பாய்கிறது...' : 'Scanning for mandate vacuums...'}
+      </p>
+    </div>
+  );
+
+  if (!data) return null;
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-[1440px] mx-auto animate-in fade-in duration-1000">
-      {/* Scenario Selector */}
-      <div className="lg:col-span-4 space-y-6">
-        <div className="px-4">
-           <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-2">Policy Schematics</h3>
-           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider italic">Infrastructure vs Mandate Mapping</p>
-        </div>
-        
-        {STRATEGIC_SCENARIOS.map((s) => (
-          <button 
-            key={s}
-            onClick={() => setSelectedScenario(s)}
-            className={`w-full text-left p-8 rounded-[2.5rem] border-2 transition-all ${selectedScenario === s ? 'bg-slate-900 border-slate-900 text-white shadow-2xl scale-[1.02]' : 'bg-white border-slate-100 hover:border-slate-300 shadow-sm'}`}
-          >
-            <h4 className="font-black text-sm uppercase tracking-tight">{s}</h4>
-            <div className="text-[8px] font-bold opacity-40 uppercase tracking-widest mt-4">Administrative Blueprint v1.2</div>
-          </button>
-        ))}
+    <div className="max-w-[1400px] mx-auto space-y-12 animate-in fade-in duration-700">
+
+      <div className="space-y-2 px-4">
+        <h2 className="text-4xl font-black tracking-tighter text-[#1E1E1E] uppercase">{t.title}</h2>
+        <p className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">{t.subtitle}</p>
       </div>
 
-      {/* Blueprint Detail */}
-      <div className="lg:col-span-8">
-        {!insight || loading ? (
-          <div className="bg-slate-900 text-white rounded-[4rem] h-[600px] flex flex-col items-center justify-center p-12 text-center">
-             <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-8"></div>
-             <p className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-400">Synthesizing Accountability Architecture...</p>
-          </div>
-        ) : (
-          <div className="space-y-10 animate-in slide-in-from-bottom-8 duration-700">
-             
-             {/* 1. ARCHITECTURE SCHEMA */}
-             <div className="bg-white border border-slate-200 rounded-[3rem] p-12 shadow-sm">
-                <div className="flex items-center gap-4 mb-12 border-b border-slate-100 pb-6">
-                   <i className="fas fa-microchip text-indigo-600 text-xl"></i>
-                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Governance Hardware-Software Schematic</h4>
-                </div>
+      {data.insight && (
+        <div className="bg-[#1E1E1E] text-[#9C7A3C] p-8 rounded-[2.5rem] border border-[#9C7A3C]/20">
+          <p className="text-sm font-bold italic leading-relaxed">{data.insight}</p>
+        </div>
+      )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                   <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
-                      <div className="text-[9px] font-black text-indigo-600 uppercase tracking-widest mb-4">1. Perception (IoT)</div>
-                      <p className="text-xs font-bold text-slate-700 leading-relaxed uppercase">{insight.architecture.perception}</p>
-                   </div>
-                   <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
-                      <div className="text-[9px] font-black text-indigo-600 uppercase tracking-widest mb-4">2. Transmission</div>
-                      <p className="text-xs font-bold text-slate-700 leading-relaxed uppercase">{insight.architecture.transmission}</p>
-                   </div>
-                   <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
-                      <div className="text-[9px] font-black text-indigo-600 uppercase tracking-widest mb-4">3. Intelligence (AI Audit)</div>
-                      <p className="text-xs font-bold text-slate-700 leading-relaxed uppercase">{insight.architecture.intelligence}</p>
-                   </div>
-                   <div className="p-8 rounded-[2rem] bg-indigo-600 text-white">
-                      <div className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-4">4. Accountability Action</div>
-                      <p className="text-xs font-black leading-relaxed uppercase">{insight.architecture.action}</p>
-                   </div>
-                </div>
-             </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {data.vacuums.map((v: any, i: number) => {
+          const riskColor =
+            v.entropyScore >= 0.70 ? '#7B2D2D' :
+            v.entropyScore >= 0.40 ? '#9C7A3C' : '#1B5E20';
 
-             {/* 2. MANAGEMENT PROTOCOL */}
-             <div className="bg-slate-900 text-white rounded-[3rem] p-12 shadow-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                   <div className="space-y-8">
-                      <div className="flex items-center gap-4 border-b border-white/10 pb-6">
-                         <i className="fas fa-tasks text-indigo-400"></i>
-                         <h4 className="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em]">Administrative Management Points</h4>
-                      </div>
-                      <ul className="space-y-4">
-                         {insight.management.map((item, i) => (
-                           <li key={i} className="flex gap-4 items-start">
-                              <span className="text-indigo-400 font-black text-xs">0{i+1}</span>
-                              <span className="text-[10px] font-black uppercase tracking-tight leading-relaxed">{item}</span>
-                           </li>
-                         ))}
-                      </ul>
-                   </div>
+          const riskBg =
+            v.entropyScore >= 0.70 ? 'bg-rose-50 border-rose-100' :
+            v.entropyScore >= 0.40 ? 'bg-amber-50 border-amber-100' :
+            'bg-emerald-50 border-emerald-100';
 
-                   <div className="space-y-8">
-                      <div className="flex items-center gap-4 border-b border-white/10 pb-6">
-                         <i className="fas fa-triangle-exclamation text-rose-400"></i>
-                         <h4 className="text-[9px] font-black text-rose-400 uppercase tracking-[0.4em]">Structural Failure Risks</h4>
-                      </div>
-                      <ul className="space-y-4">
-                         {insight.risks.map((item, i) => (
-                           <li key={i} className="flex gap-4 items-start">
-                              <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1"></div>
-                              <span className="text-[10px] font-black uppercase tracking-tight leading-relaxed opacity-60 italic">“{item}”</span>
-                           </li>
-                         ))}
-                      </ul>
-                   </div>
+          return (
+            <div key={i} className={`bg-white border rounded-[3rem] p-10 shadow-sm space-y-6 ${riskBg}`}>
+              <div className="flex justify-between items-start">
+                <h3 className="font-black text-lg text-[#1E1E1E] uppercase tracking-tight leading-tight max-w-[70%]">
+                  {v.category}
+                </h3>
+                <div className="text-right">
+                  <div className="text-3xl font-black" style={{ color: riskColor }}>
+                    {(v.entropyScore * 100).toFixed(0)}
+                  </div>
+                  <div className="text-[8px] font-black uppercase tracking-widest text-[#6A6A6A]">
+                    {t.entropy}
+                  </div>
                 </div>
-                
-                <div className="mt-12 pt-8 border-t border-white/5 flex justify-between items-center opacity-40">
-                   <span className="text-[8px] font-black uppercase tracking-[0.3em]">AIoT Policy Blueprint • Commissioner Access Only</span>
-                   <span className="text-[8px] font-black uppercase tracking-[0.3em]">Module: Mandate_Truth_V1</span>
-                </div>
-             </div>
+              </div>
 
-          </div>
-        )}
+              <div className="h-2 bg-white/60 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-1000"
+                  style={{
+                    width: `${v.entropyScore * 100}%`,
+                    backgroundColor: riskColor
+                  }}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-1">{t.owner}</div>
+                  <div className="text-xs font-black text-[#1E1E1E] uppercase">{v.primaryDept}</div>
+                </div>
+                <div>
+                  <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-1">{t.handoffs}</div>
+                  <div className="text-xs font-black text-[#1E1E1E]">{v.handoffCount}</div>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-2xl p-6">
+                <div className="text-[8px] font-black text-[#6A6A6A] uppercase tracking-widest mb-2">{t.recommendation}</div>
+                <p className="text-[10px] font-bold text-[#1E1E1E] leading-relaxed">{v.recommendation}</p>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span
+                  className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-full"
+                  style={{ color: riskColor, backgroundColor: `${riskColor}15` }}
+                >
+                  {v.ownershipClarity}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-export default AIoTGovernanceBlueprint;
+export default MandateVacuumIdentifier;
