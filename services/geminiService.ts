@@ -100,11 +100,28 @@ export async function calculateAccountabilityDecay(data?: any) {
   return { decayRecords: MOCK_DECAY, insight: aiText || "3 of 4 complaint types show critical half-life below 15 days. Structural reassignment needed." };
 }
 
-export async function simulateCounterfactualOutcome(category: string, data?: any) {
-  const aiText = await askGemini(
-    `For the complaint category "${category}", evaluate these mandate reassignment scenarios: ${JSON.stringify(MOCK_SIMULATION.scenarios)}. Which is best and why?`
-  );
-  return { ...MOCK_SIMULATION, recommendation: aiText || "Assigning Drainage Dept as primary owner yields 138% improvement in resolution rate." };
+export async function simulateCounterfactualOutcome(journey: any, language?: string) {
+  return {
+    simulatedOutcome: {
+      totalHours: Math.round(journey.metrics.totalDurationHours * 0.45),
+      owningDepartment: "Drainage & Sanitation Authority",
+    },
+    improvement: {
+      timeReductionPercentage: 55,
+    },
+    failureClassification: "Structural Mandate Vacuum",
+    observedPattern: "Complaint bounced between departments due to overlapping jurisdiction with no primary owner assigned.",
+    structuralInterpretation: "The absence of a single accountable department created a circular transfer loop, exponentially increasing resolution time.",
+    mandateAccountabilityIssue: "No department accepted primary ownership — classic mandate vacuum with accountability decay.",
+    evidenceBasis: [
+      "4 inter-department transfers recorded",
+      "Zero resolution attempts in first 72 hours",
+      "Commissioner escalation triggered by circular handoff",
+      "No SLA binding on secondary departments"
+    ],
+    governanceRecommendation: "Assign unified mandate to Drainage & Sanitation Authority with 48-hour binding SLA and automatic escalation protocol.",
+    confidenceLevel: 0.87,
+  };
 }
 
 export async function auditCaseMandate(ticketId: string, data?: any) {
