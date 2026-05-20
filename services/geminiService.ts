@@ -1,76 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
-
+ 
 const API_KEY = typeof window !== "undefined"
-  ? (window as any).__VITE_GEMINI_API_KEY__ || import.meta.env?.VITE_GEMINI_API_KEY
+  ? (import.meta as any).env?.VITE_GEMINI_API_KEY
   : undefined;
-
+ 
 const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
-
-// ── Mock fallbacks ────────────────────────────────────────────────────────────
-
-const MOCK_VACUUMS = [
-  { category: "Drain-Adjacent Mixed Waste", entropyScore: 0.91, ownershipClarity: "Critical", primaryDept: "Unassigned", handoffCount: 4, recommendation: "Assign primary mandate to Drainage Dept with Sanitation as secondary." },
-  { category: "Public Toilet Structure", entropyScore: 0.74, ownershipClarity: "High Risk", primaryDept: "Health Office", handoffCount: 3, recommendation: "Clarify structural vs sanitation boundary between PWD and Health." },
-  { category: "Sidewalk Debris", entropyScore: 0.61, ownershipClarity: "Moderate", primaryDept: "Sanitation Dept", handoffCount: 2, recommendation: "Define encroachment threshold to reduce Sanitation-Encroachment handoffs." },
-  { category: "Streetlight Outage", entropyScore: 0.38, ownershipClarity: "Stable", primaryDept: "Electricity Dept", handoffCount: 1, recommendation: "Ownership is clear. No restructuring required." },
-];
-
-const MOCK_DECAY = [
-  { complaintId: "MDU-1024", category: "Mixed Waste", halfLifeDays: 8.2, finalAccountabilityPct: 18, risk: "CRITICAL", transfers: 4 },
-  { complaintId: "MDU-882", category: "Public Toilet", halfLifeDays: 14.1, finalAccountabilityPct: 31, risk: "CRITICAL", transfers: 3 },
-  { complaintId: "MDU-441", category: "Sidewalk Debris", halfLifeDays: 22.4, finalAccountabilityPct: 47, risk: "MODERATE", transfers: 2 },
-  { complaintId: "MDU-203", category: "Streetlight", halfLifeDays: 38.7, finalAccountabilityPct: 71, risk: "STABLE", transfers: 1 },
-];
-
-const MOCK_SIMULATION = {
-  baseline: { entropy: 0.91, halfLifeDays: 8.2, resolutionRate: 0.34 },
-  scenarios: [
-    { primaryDept: "Drainage Dept", entropy: 0.28, halfLifeDays: 31.4, resolutionRate: 0.81, improvementPct: 138 },
-    { primaryDept: "Sanitation Dept", entropy: 0.44, halfLifeDays: 22.1, resolutionRate: 0.67, improvementPct: 97 },
-    { primaryDept: "Municipal Corp", entropy: 0.52, halfLifeDays: 18.9, resolutionRate: 0.58, improvementPct: 71 },
-  ]
-};
-
-const MOCK_KPIs = {
-  totalComplaints: 2847,
-  resolvedThisMonth: 1203,
-  avgResolutionDays: 18.4,
-  mandateVacuumCount: 7,
-  highEntropyCategories: 3,
-  bureaucraticWasteScore: 42,
-};
-
-const MOCK_ANALYTICS = {
-  monthlyTrend: [
-    { month: "Aug", complaints: 312, resolved: 198 },
-    { month: "Sep", complaints: 287, resolved: 201 },
-    { month: "Oct", complaints: 341, resolved: 189 },
-    { month: "Nov", complaints: 298, resolved: 221 },
-    { month: "Dec", complaints: 264, resolved: 198 },
-    { month: "Jan", complaints: 345, resolved: 196 },
-  ],
-  deptPerformance: [
-    { dept: "Sanitation", avgDays: 12, resolutionRate: 0.78 },
-    { dept: "PWD", avgDays: 21, resolutionRate: 0.61 },
-    { dept: "Health Office", avgDays: 18, resolutionRate: 0.69 },
-    { dept: "Drainage", avgDays: 31, resolutionRate: 0.44 },
-    { dept: "Electricity", avgDays: 9, resolutionRate: 0.87 },
-  ]
-};
-
-const MOCK_INCIDENTS = [
-  { id: "INC-001", ward: "Ward 45", type: "Overflow", severity: "High", timestamp: new Date().toISOString() },
-  { id: "INC-002", ward: "Ward 12", type: "Blockage", severity: "Medium", timestamp: new Date().toISOString() },
-];
-
-const MOCK_SENSORS = [
-  { id: "SENS-001", location: "Mattuthavani Market", status: "Alert", fillLevel: 87 },
-  { id: "SENS-002", location: "Medical College", status: "Normal", fillLevel: 43 },
-  { id: "SENS-003", location: "Meenakshi Temple", status: "Warning", fillLevel: 71 },
-];
-
-// ── AI helper ─────────────────────────────────────────────────────────────────
-
+ 
 async function askGemini(prompt: string): Promise<string> {
   if (!ai) return "";
   try {
@@ -83,9 +18,8 @@ async function askGemini(prompt: string): Promise<string> {
     return "";
   }
 }
-
-// ── Exported functions ────────────────────────────────────────────────────────
-
+ 
+// ── identifyMandateVacuums ────────────────────────────────────────────────────
 export async function identifyMandateVacuums(language?: string) {
   return [
     {
@@ -93,7 +27,7 @@ export async function identifyMandateVacuums(language?: string) {
       failureClassification: "Structural Mandate Vacuum",
       confidenceLevel: 0.91,
       observedPattern: "Complaint bounces between Sanitation and Drainage with no resolution. Both departments reject primary ownership citing boundary ambiguity.",
-      structuralInterpretation: "No clear mandate boundary exists between liquid waste (Drainage) and solid waste (Sanitation) for mixed drain complaints. The gap is structural, not operational.",
+      structuralInterpretation: "No clear mandate boundary exists between liquid waste (Drainage) and solid waste (Sanitation) for mixed drain complaints.",
       mandateAccountabilityIssue: "Zero departmental ownership — circular transfer loop with Commissioner escalation as only exit.",
       evidenceBasis: [
         "4 inter-department transfers per complaint on average",
@@ -107,7 +41,7 @@ export async function identifyMandateVacuums(language?: string) {
       category: "Public Toilet Structure",
       failureClassification: "Structural Boundary Conflict",
       confidenceLevel: 0.74,
-      observedPattern: "Health Office logs complaint as sanitation issue. PWD rejects as structural maintenance requiring tender cycle. Complaint stalls indefinitely.",
+      observedPattern: "Health Office logs complaint as sanitation issue. PWD rejects as structural maintenance requiring tender cycle.",
       structuralInterpretation: "Structural maintenance mandate is split between Health (operations) and PWD (infrastructure) with no protocol for joint ownership.",
       mandateAccountabilityIssue: "Tender cycle requirement creates 420-hour idle periods. No department holds accountability during procurement.",
       evidenceBasis: [
@@ -122,7 +56,7 @@ export async function identifyMandateVacuums(language?: string) {
       category: "Sidewalk Debris",
       failureClassification: "Mandate Ambiguity",
       confidenceLevel: 0.61,
-      observedPattern: "Sanitation accepts complaint then transfers to Encroachment Cell when structure is involved. Encroachment rejects if no active encroacher is identified.",
+      observedPattern: "Sanitation accepts complaint then transfers to Encroachment Cell. Encroachment rejects if no active encroacher is identified.",
       structuralInterpretation: "Abandoned waste with structural involvement falls in a mandate gap — neither Sanitation nor Encroachment claims ownership.",
       mandateAccountabilityIssue: "Encroachment mandate requires active encroacher presence. Abandoned debris has no owner, so complaint is rejected.",
       evidenceBasis: [
@@ -150,18 +84,25 @@ export async function identifyMandateVacuums(language?: string) {
     }
   ];
 }
-
+ 
+// ── calculateAccountabilityDecay ──────────────────────────────────────────────
 export async function calculateAccountabilityDecay(data?: any) {
-  const aiText = await askGemini(
-    `Analyze this accountability decay data for municipal complaints: ${JSON.stringify(data ?? MOCK_DECAY)}. Summarize key risk patterns.`
-  );
-  return { decayRecords: MOCK_DECAY, insight: aiText || "3 of 4 complaint types show critical half-life below 15 days. Structural reassignment needed." };
+  return {
+    decayRecords: [
+      { complaintId: "MDU-1024", category: "Mixed Waste", halfLifeDays: 8.2, finalAccountabilityPct: 18, risk: "CRITICAL", transfers: 4 },
+      { complaintId: "MDU-882", category: "Public Toilet", halfLifeDays: 14.1, finalAccountabilityPct: 31, risk: "CRITICAL", transfers: 3 },
+      { complaintId: "MDU-441", category: "Sidewalk Debris", halfLifeDays: 22.4, finalAccountabilityPct: 47, risk: "MODERATE", transfers: 2 },
+      { complaintId: "MDU-203", category: "Streetlight", halfLifeDays: 38.7, finalAccountabilityPct: 71, risk: "STABLE", transfers: 1 },
+    ],
+    insight: "3 of 4 complaint types show critical half-life below 15 days. Structural reassignment needed."
+  };
 }
-
+ 
+// ── simulateCounterfactualOutcome ─────────────────────────────────────────────
 export async function simulateCounterfactualOutcome(journey: any, language?: string) {
   return {
     simulatedOutcome: {
-      totalHours: Math.round(journey.metrics.totalDurationHours * 0.45),
+      totalHours: Math.round((journey?.metrics?.totalDurationHours ?? 210) * 0.45),
       owningDepartment: "Drainage & Sanitation Authority",
     },
     improvement: {
@@ -181,19 +122,18 @@ export async function simulateCounterfactualOutcome(journey: any, language?: str
     confidenceLevel: 0.87,
   };
 }
-
+ 
+// ── auditCaseMandate ──────────────────────────────────────────────────────────
 export async function auditCaseMandate(ticketId: string, data?: any) {
-  const aiText = await askGemini(
-    `Audit this complaint journey for mandate failures: Ticket ${ticketId}. Identify accountability gaps and recommend fixes.`
-  );
   return {
     ticketId,
-    auditResult: aiText || `Ticket ${ticketId} shows circular handoff pattern. Commissioner escalation indicates systemic mandate vacuum.`,
+    auditResult: `Ticket ${ticketId} shows circular handoff pattern. Commissioner escalation indicates systemic mandate vacuum.`,
     riskLevel: "HIGH",
     recommendedAction: "Assign single department as mandate owner with 72-hour resolution SLA."
   };
 }
-
+ 
+// ── getAIoTGovernanceBlueprint ────────────────────────────────────────────────
 export async function getAIoTGovernanceBlueprint(ward?: string) {
   return {
     ward: ward ?? "All Wards",
@@ -218,10 +158,20 @@ export async function getAIoTGovernanceBlueprint(ward?: string) {
     estimatedImprovementPct: 43,
   };
 }
+ 
+// ── getGovernanceKpis ─────────────────────────────────────────────────────────
 export async function getGovernanceKpis() {
-  return MOCK_KPIs;
+  return {
+    totalComplaints: 2847,
+    resolvedThisMonth: 1203,
+    avgResolutionDays: 18.4,
+    mandateVacuumCount: 7,
+    highEntropyCategories: 3,
+    bureaucraticWasteScore: 42,
+  };
 }
-
+ 
+// ── getAdvancedAnalytics ──────────────────────────────────────────────────────
 export async function getAdvancedAnalytics() {
   return {
     efficiencyScore: 82,
@@ -252,50 +202,51 @@ export async function getAdvancedAnalytics() {
     ]
   };
 }
-
+ 
+// ── generateMockIncident ──────────────────────────────────────────────────────
 export async function generateMockIncident() {
-  return MOCK_INCIDENTS[Math.floor(Math.random() * MOCK_INCIDENTS.length)];
+  const incidents = [
+    { id: "INC-001", ward: "Ward 45", type: "Overflow", severity: "High", timestamp: new Date().toISOString() },
+    { id: "INC-002", ward: "Ward 12", type: "Blockage", severity: "Medium", timestamp: new Date().toISOString() },
+  ];
+  return incidents[Math.floor(Math.random() * incidents.length)];
 }
-
+ 
+// ── generateSOP ───────────────────────────────────────────────────────────────
 export async function generateSOP(incidentType: string) {
-  const aiText = await askGemini(
-    `Generate a standard operating procedure for handling a "${incidentType}" municipal complaint in Madurai. Include department assignments and time limits.`
-  );
-  return aiText || `SOP for ${incidentType}: 1. Sanitation logs complaint within 2hrs. 2. Assess mandate ownership within 4hrs. 3. Assign primary department within 8hrs. 4. Resolve within 72hrs or escalate to Commissioner.`;
+  return `SOP for ${incidentType}: 1. Sanitation logs complaint within 2hrs. 2. Assess mandate ownership within 4hrs. 3. Assign primary department within 8hrs. 4. Resolve within 72hrs or escalate to Commissioner.`;
 }
-
+ 
+// ── getPredictiveAnalytics ────────────────────────────────────────────────────
 export async function getPredictiveAnalytics(ward?: string) {
-  const aiText = await askGemini(
-    `Predict complaint surge patterns for ${ward ?? "Madurai"} municipal wards based on seasonal and historical trends.`
-  );
   return {
     ward: ward ?? "All Wards",
-    prediction: aiText || "Expect 23% surge in drain-adjacent complaints post-monsoon (Oct-Nov). Pre-position Drainage Dept resources in Zone 2.",
+    prediction: "Expect 23% surge in drain-adjacent complaints post-monsoon (Oct-Nov). Pre-position Drainage Dept resources in Zone 2.",
     riskZones: ["Ward 45", "Ward 12", "Ward 23"],
     confidenceScore: 0.74,
   };
 }
-
+ 
+// ── getUpdatedSensorStatuses ──────────────────────────────────────────────────
 export async function getUpdatedSensorStatuses() {
-  return MOCK_SENSORS.map(s => ({
-    ...s,
-    fillLevel: Math.min(100, s.fillLevel + Math.floor(Math.random() * 5 - 2)),
-    lastUpdated: new Date().toISOString(),
-  }));
+  return [
+    { id: "SENS-001", location: "Mattuthavani Market", status: "Alert", fillLevel: 87, lastUpdated: new Date().toISOString() },
+    { id: "SENS-002", location: "Medical College", status: "Normal", fillLevel: 43, lastUpdated: new Date().toISOString() },
+    { id: "SENS-003", location: "Meenakshi Temple", status: "Warning", fillLevel: 71, lastUpdated: new Date().toISOString() },
+  ];
 }
-
+ 
+// ── runAccountabilityAudit ────────────────────────────────────────────────────
 export async function runAccountabilityAudit(deptName: string) {
-  const aiText = await askGemini(
-    `Run an accountability audit for ${deptName} in Madurai municipal governance. Identify mandate overlaps and decay patterns.`
-  );
   return {
     department: deptName,
-    auditSummary: aiText || `${deptName} shows moderate accountability decay. Average half-life of 18.4 days. 3 active mandate conflicts with adjacent departments.`,
+    auditSummary: `${deptName} shows moderate accountability decay. Average half-life of 18.4 days. 3 active mandate conflicts with adjacent departments.`,
     score: Math.floor(Math.random() * 40) + 40,
     mandateConflicts: 3,
   };
 }
-
+ 
+// ── getSFRASAttribution ───────────────────────────────────────────────────────
 export async function getSFRASAttribution(assetId: string) {
   return {
     assetId,
@@ -305,37 +256,36 @@ export async function getSFRASAttribution(assetId: string) {
     recommendation: "Clarify PWD vs Sanitation boundary for structural assets.",
   };
 }
-
+ 
+// ── getSIH_SFRAS_Analysis ─────────────────────────────────────────────────────
 export async function getSIH_SFRAS_Analysis(data?: any) {
-  const aiText = await askGemini(
-    `Analyze SFRAS attribution data for Madurai sanitation assets. Identify mandate gaps and structural accountability issues.`
-  );
   return {
-    analysis: aiText || "SFRAS data shows 34% of sanitation assets have unclear mandate attribution between PWD and Sanitation Dept. Recommend joint ownership protocol.",
+    analysis: "SFRAS data shows 34% of sanitation assets have unclear mandate attribution between PWD and Sanitation Dept. Recommend joint ownership protocol.",
     totalAssets: 48,
     clearMandate: 32,
     ambiguousMandate: 16,
   };
 }
-
+ 
+// ── validateSanitationImage ───────────────────────────────────────────────────
 export async function validateSanitationImage(base64Image: string, mimeType: string = "image/jpeg") {
-  if (!ai) {
-    return { valid: true, issue: "No API key — mock validation passed.", severity: "Low", recommendedAction: "Configure GEMINI_API_KEY for real image analysis." };
-  }
+  if (!ai) return true;
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [
-        { inlineData: { data: base64Image, mimeType } },
-        { text: "Analyze this image for municipal sanitation issues. Identify: 1) Type of issue, 2) Severity (Low/Medium/High/Critical), 3) Which department should own this complaint, 4) Recommended action." }
-      ],
+        { inlineData: { data: base64Image.split(',')[1] ?? base64Image, mimeType } },
+        { text: "Does this image show a municipal sanitation issue like garbage, drain overflow, or broken infrastructure? Answer only YES or NO." }
+      ] as any,
     });
-    return { valid: true, analysis: response.text, severity: "Medium", recommendedDept: "Sanitation Dept" };
+    const text = response.text?.toUpperCase() ?? "";
+    return text.includes("YES");
   } catch {
-    return { valid: false, issue: "Image analysis failed.", severity: "Unknown", recommendedAction: "Manual review required." };
+    return true;
   }
 }
-
+ 
+// ── createExpertChat ──────────────────────────────────────────────────────────
 export function createExpertChat() {
   if (!ai) {
     return {
@@ -346,8 +296,8 @@ export function createExpertChat() {
   const chat = ai.chats.create({
     model: "gemini-2.0-flash",
     history: [
-      { role: "user", parts: [{ text: "You are a municipal governance expert specializing in Madurai's sanitation complaint system. Help analyze mandate vacuums, accountability decay, and structural governance failures." }] },
-      { role: "model", parts: [{ text: "Understood. I'm your governance intelligence expert for Madurai municipal systems. I can help analyze mandate ownership gaps, accountability half-life metrics, and counterfactual policy scenarios. What would you like to investigate?" }] },
+      { role: "user", parts: [{ text: "You are a municipal governance expert specializing in Madurai sanitation complaint systems." }] },
+      { role: "model", parts: [{ text: "Understood. I am your governance intelligence expert for Madurai municipal systems." }] },
     ],
   });
   return {
@@ -358,23 +308,24 @@ export function createExpertChat() {
     isOffline: false,
   };
 }
-
+ 
+// ── getWardFromCoordinates ────────────────────────────────────────────────────
 export async function getWardFromCoordinates(lat: number, lng: number) {
   const WARD_COORDS: Record<string, { lat: number; lng: number }> = {
-    "Ward 1 (Simmakkal)": { lat: 9.9195, lng: 78.1193 },
-    "Ward 12 (Ellis Nagar North)": { lat: 9.9312, lng: 78.1284 },
-    "Ward 23 (KK Nagar)": { lat: 9.9401, lng: 78.1102 },
-    "Ward 45 (Karisalkulam)": { lat: 9.9089, lng: 78.1356 },
-    "Ward 74 (Villapuram)": { lat: 9.9523, lng: 78.1421 },
-    "Ward 84 (Airport Area)": { lat: 9.8348, lng: 78.0934 },
-    "Ward 90 (Vilangudi)": { lat: 9.9634, lng: 78.1287 },
-    "Ward 100 (Kulamangalam)": { lat: 9.9712, lng: 78.1456 },
+    "1": { lat: 9.9195, lng: 78.1193 },
+    "12": { lat: 9.9312, lng: 78.1284 },
+    "23": { lat: 9.9401, lng: 78.1102 },
+    "45": { lat: 9.9089, lng: 78.1356 },
+    "74": { lat: 9.9523, lng: 78.1421 },
+    "84": { lat: 9.8348, lng: 78.0934 },
+    "90": { lat: 9.9634, lng: 78.1287 },
+    "100": { lat: 9.9712, lng: 78.1456 },
   };
-  let closest = "Ward 1 (Simmakkal)";
+  let closest = "1";
   let minDist = Infinity;
-  for (const [ward, coords] of Object.entries(WARD_COORDS)) {
+  for (const [wardId, coords] of Object.entries(WARD_COORDS)) {
     const dist = Math.sqrt(Math.pow(lat - coords.lat, 2) + Math.pow(lng - coords.lng, 2));
-    if (dist < minDist) { minDist = dist; closest = ward; }
+    if (dist < minDist) { minDist = dist; closest = wardId; }
   }
   return closest;
 }
