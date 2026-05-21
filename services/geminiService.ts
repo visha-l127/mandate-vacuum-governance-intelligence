@@ -1,3 +1,46 @@
+function getComplaintCategoriesAnalysis(csvText: string) {
+  const lines = csvText.trim().split('\n');
+  const complaints: any[] = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split('\t');
+    complaints.push({
+      category: values[1],
+      from_dept: values[2],
+      days_open: parseInt(values[6], 10) || 0
+    });
+  }
+  
+  const categories = [...new Set(complaints.map(c => c.category))];
+  
+  return categories.map(cat => {
+    const catComplaints = complaints.filter(c => c.category === cat);
+    const deptCounts: Record<string, number> = {};
+    
+    catComplaints.forEach(c => {
+      deptCounts[c.from_dept] = (deptCounts[c.from_dept] || 0) + 1;
+    });
+    
+    let entropy = 0;
+    Object.values(deptCounts).forEach(count => {
+      const p = count / catComplaints.length;
+      entropy -= p * Math.log2(p);
+    });
+    
+    const maxEntropy = Math.log2(Object.keys(deptCounts).length);
+    const normalizedEntropy = maxEntropy > 0 ? entropy / maxEntropy : 0;
+    const avgDays = catComplaints.reduce((s, c) => s + c.days_open, 0) / catComplaints.length;
+    
+    return {
+      category: cat,
+      entropy: normalizedEntropy,
+      halfLife: avgDays / Math.LN2,
+      totalComplaints: catComplaints.length,
+      avgResolutionDays: avgDays
+    };
+  });
+}
+
 import { getComplaintCategoriesAnalysis } from './dataProcessor';
 import { GoogleGenAI } from "@google/genai";
  
