@@ -40,6 +40,10 @@ If Madurai Municipal Corporation implements this:
 - Drain-adjacent waste complaints: 91% entropy → 40% entropy (49% improvement)
 - Resolution time: 210 hours → 94 hours (55% faster)
 - Expected cost savings: ₹X lakhs annually (based on complaint backlog)
+- Reduced inter-department complaint transfers
+- Improved mandate clarity across sanitation categories
+
+*Impact values are generated from counterfactual simulations on historical complaint-transfer data.*
 
 ---
 
