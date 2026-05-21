@@ -6,6 +6,14 @@
 
 ---
 
+# Mandate Vacuum
+
+🌐 **[View Live Dashboard](https://visha-l127.github.io/mandate-vacuum-governance-intelligence)**
+
+Most civic tech tools ask...
+
+---
+
 Most civic tech tools ask: *"What happened to my complaint?"*
 
 Mandate Vacuum asks something harder: *"Why does the system keep failing to answer that question?"*
