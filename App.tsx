@@ -12,6 +12,10 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'audit' | 'vacuum' | 'decay' | 'simulator' | 'insights'>('vacuum');
   const [language, setLanguage] = useState<Language | null>(null);
 
+  // TEST CITIZEN API
+  const result = analyzeCitizenComplaint("Drain");
+  console.log("✅ Citizen Analysis Result:", result);
+
   if (!language) return <LanguageGate onSelect={setLanguage} />;
 
   return (
