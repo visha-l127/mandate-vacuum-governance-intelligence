@@ -1,4 +1,4 @@
-
+import { analyzeCitizenComplaint } from './services/citizenAnalysisAPI';
 import React, { useState } from 'react';
 import ForensicJourneyTrace from './components/ForensicJourneyTrace';
 import MandateVacuumIdentifier from './components/MandateVacuumIdentifier';
