@@ -1,5 +1,7 @@
 # Environment & secrets
 .env
+.env.local
+.env.*.local
 *.json
 service-account*.json
 
