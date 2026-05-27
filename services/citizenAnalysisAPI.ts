@@ -7,7 +7,7 @@ export function analyzeCitizenComplaint(category: string) {
       avg_resolution: 9,
       risk: "HIGH"
     },
-    "Drain": {
+    Drain: {
       entropy: 0.91,
       half_life: 28.9,
       primary_dept: "Drainage Dept",
@@ -28,14 +28,14 @@ export function analyzeCitizenComplaint(category: string) {
       avg_resolution: 34,
       risk: "HIGH"
     },
-    "Forest": {
+    Forest: {
       entropy: 0.98,
       half_life: 28.9,
       primary_dept: "Parks Dept",
       avg_resolution: 31,
       risk: "HIGH"
     },
-    "Health": {
+    Health: {
       entropy: 1.0,
       half_life: 38.1,
       primary_dept: "Health Dept",

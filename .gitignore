@@ -1,8 +1,14 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
 # Environment & secrets
 .env
 .env.local
 .env.*.local
-*.json
 service-account*.json
 
 # Python
@@ -15,14 +21,12 @@ env/
 venv/
 .venv/
 *.egg-info/
-dist/
-build/
 
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# Results (generated files — commit manually when ready)
+# Results
 results/*.png
 results/*.csv
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { identifyMandateVacuums } from '../services/geminiService';
 import { Language } from '../types';
