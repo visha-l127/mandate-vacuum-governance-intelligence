@@ -1,49 +1,44 @@
-export const complaintMetrics: Record<string, any> = {
+export const complaintMetrics = {
   Electrical: {
     entropy: 0.98,
-    halfLife: 33.9,
-    primaryOwner: "Electrical Dept",
-    avgResolutionDays: 9,
-    fragmentationLevel: "HIGH"
+    half_life: 33.9,
+    primary_dept: "Electrical Dept",
+    avg_resolution: 9,
+    risk: "HIGH"
   },
-
   Drain: {
     entropy: 0.91,
-    halfLife: 28.9,
-    primaryOwner: "Drainage Dept",
-    avgResolutionDays: 48,
-    fragmentationLevel: "HIGH"
+    half_life: 28.9,
+    primary_dept: "Drainage Dept",
+    avg_resolution: 48,
+    risk: "HIGH"
   },
-
   "Solid Waste": {
     entropy: 0.99,
-    halfLife: 34.1,
-    primaryOwner: "Sanitation Dept",
-    avgResolutionDays: 35,
-    fragmentationLevel: "HIGH"
+    half_life: 34.1,
+    primary_dept: "Sanitation Dept",
+    avg_resolution: 35,
+    risk: "HIGH"
   },
-
   "Road Maintenance": {
     entropy: 1.0,
-    halfLife: 33.9,
-    primaryOwner: "PWD",
-    avgResolutionDays: 34,
-    fragmentationLevel: "HIGH"
+    half_life: 33.9,
+    primary_dept: "PWD",
+    avg_resolution: 34,
+    risk: "HIGH"
   },
-
   Forest: {
     entropy: 0.98,
-    halfLife: 28.9,
-    primaryOwner: "Parks Dept",
-    avgResolutionDays: 31,
-    fragmentationLevel: "HIGH"
+    half_life: 28.9,
+    primary_dept: "Parks Dept",
+    avg_resolution: 31,
+    risk: "HIGH"
   },
-
   Health: {
     entropy: 1.0,
-    halfLife: 38.1,
-    primaryOwner: "Health Dept",
-    avgResolutionDays: 38,
-    fragmentationLevel: "HIGH"
+    half_life: 38.1,
+    primary_dept: "Health Dept",
+    avg_resolution: 38,
+    risk: "HIGH"
   }
 };

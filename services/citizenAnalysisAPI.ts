@@ -1,57 +1,30 @@
-export function analyzeCitizenComplaint(category: string) {
-  const complaintData: any = {
-    Electrical: {
-      entropy: 0.98,
-      half_life: 33.9,
-      primary_dept: "Electrical Dept",
-      avg_resolution: 9,
-      risk: "HIGH"
-    },
-    Drain: {
-      entropy: 0.91,
-      half_life: 28.9,
-      primary_dept: "Drainage Dept",
-      avg_resolution: 48,
-      risk: "HIGH"
-    },
-    "Solid Waste": {
-      entropy: 0.99,
-      half_life: 34.1,
-      primary_dept: "Sanitation Dept",
-      avg_resolution: 35,
-      risk: "HIGH"
-    },
-    "Road Maintenance": {
-      entropy: 1.0,
-      half_life: 33.9,
-      primary_dept: "PWD",
-      avg_resolution: 34,
-      risk: "HIGH"
-    },
-    Forest: {
-      entropy: 0.98,
-      half_life: 28.9,
-      primary_dept: "Parks Dept",
-      avg_resolution: 31,
-      risk: "HIGH"
-    },
-    Health: {
-      entropy: 1.0,
-      half_life: 38.1,
-      primary_dept: "Health Dept",
-      avg_resolution: 38,
-      risk: "HIGH"
-    }
-  };
+import { complaintMetrics } from '../data/complaintMetrics';
 
-  const data = complaintData[category];
+export function analyzeCitizenComplaint(category: string) {
+  const data = complaintMetrics[category as keyof typeof complaintMetrics];
+
+  if (!data) {
+    return {
+      error: `Unknown complaint category: ${category}`
+    };
+  }
+
+  // Calculate risk dynamically from entropy
+  let risk = "LOW";
+  if (data.entropy >= 0.7) {
+    risk = "HIGH";
+  } else if (data.entropy >= 0.4) {
+    risk = "MEDIUM";
+  }
+
+  const escalatedResolutionDays = Math.round(data.avg_resolution * 0.45);
 
   return {
     category,
-    risk: data.risk,
-    riskReason: `${category} complaints are shared between multiple departments`,
+    risk,
+    riskReason: `${category} complaints are shared between multiple departments.`,
     baseResolutionDays: data.avg_resolution,
-    escalatedResolutionDays: Math.round(data.avg_resolution * 0.45),
+    escalatedResolutionDays,
     recommendedDept: data.primary_dept,
     entropyScore: data.entropy,
     improvement: "55%"
