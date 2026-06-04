@@ -104,6 +104,17 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
         </p>
       </div>
 
+      {/* Explanation Card */}
+      <div className="bg-[#F8F6F0] rounded-[2rem] p-6 border border-[#9C7A3C]/20 shadow-sm">
+        <p className="text-sm font-black text-[#9C7A3C] mb-3 tracking-normal">
+          {t.common.whatThisPageShows}
+        </p>
+
+        <p className="text-[#3B2A18] font-bold leading-relaxed">
+          {t.pageExplanations.vacuums}
+        </p>
+      </div>
+
       {/* Category Selection */}
       <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
         <p className="text-sm font-black tracking-normal text-gray-600 mb-6">
@@ -215,7 +226,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               </div>
             </div>
 
-            {/* Recommendation Card - fixed text color */}
+            {/* Recommendation Card */}
             <div className="bg-[#1F1F1F] rounded-3xl p-6 border border-[#9C7A3C]/30 shadow-lg">
               <p className="text-sm font-black text-[#F4D38A] mb-3 tracking-normal">
                 {language === "ta" ? "பரிந்துரை" : "RECOMMENDATION"}

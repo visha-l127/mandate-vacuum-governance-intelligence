@@ -24,10 +24,30 @@ export const translations = {
       dataSource: "DATA SOURCE: BBMP COMPLAINT RECORDS",
       recommendation:
         "Consolidate ownership. Current entropy scores indicate severe mandate fragmentation.",
-      departments: "departments",
+      departments: "Departments",
       reason: "Reason",
       risk: "Risk",
       inference: "Inference",
+      whatThisPageShows: "WHAT THIS PAGE SHOWS",
+    },
+
+    pageExplanations: {
+      vacuums:
+        "This page identifies complaint categories where responsibility is spread across multiple departments. A higher entropy score means there is no clear primary owner, so complaints are more likely to get delayed or transferred repeatedly.",
+      decay:
+        "This page shows how accountability reduces when a complaint moves from one department to another. The more transfers happen, the harder it becomes to identify who is actually responsible.",
+      simulator:
+        "This page compares the current fragmented system with a better system where one department has clear ownership. It estimates how much faster complaints could be resolved if responsibility is unified.",
+      insights:
+        "This page summarizes the overall governance problem. It is mainly useful for officials, policy makers, and evaluators because it explains what structural change is needed.",
+      citizen:
+        "Citizens can select a complaint type and understand whether their complaint may face delay, why the delay may happen, and which department should be approached first.",
+    },
+
+    disclaimer: {
+      title: "IMPORTANT NOTE",
+      citizen:
+        "This is a decision-support prototype based on historical BBMP complaint data. It is not an official government complaint filing service.",
     },
 
     vacuums: {
@@ -162,6 +182,26 @@ export const translations = {
       reason: "காரணம்",
       risk: "அபாயம்",
       inference: "மதிப்பீடு",
+      whatThisPageShows: "இந்த பக்கம் என்ன காட்டுகிறது",
+    },
+
+    pageExplanations: {
+      vacuums:
+        "இந்த பக்கம் புகார் பொறுப்பு பல துறைகளில் சிதறியுள்ள பகுதிகளை காட்டுகிறது. அதிக சிதறல் மதிப்பெண் இருந்தால், தெளிவான முதன்மை பொறுப்பாளர் இல்லை என்பதையும், புகார் தாமதமாகும் வாய்ப்பு அதிகம் என்பதையும் குறிக்கிறது.",
+      decay:
+        "ஒரு புகார் ஒரு துறையிலிருந்து மற்றொரு துறைக்கு மாறும்போது பொறுப்புணர்வு எப்படி குறைகிறது என்பதை இந்த பக்கம் காட்டுகிறது. மாற்றங்கள் அதிகமானால், உண்மையில் யார் பொறுப்பு என்பது தெளிவில்லாமல் போகிறது.",
+      simulator:
+        "தற்போதைய சிதறிய பொறுப்பு அமைப்பையும், ஒரே துறைக்கு தெளிவான பொறுப்பு வழங்கப்படும் மேம்பட்ட அமைப்பையும் இந்த பக்கம் ஒப்பிடுகிறது. பொறுப்பு ஒருங்கிணைக்கப்பட்டால் புகார்கள் எவ்வளவு வேகமாக தீர்க்கப்படலாம் என்பதை மதிப்பிடுகிறது.",
+      insights:
+        "மொத்த நிர்வாகப் பிரச்சினையை இந்த பக்கம் சுருக்கமாக விளக்குகிறது. இது அதிகாரிகள், கொள்கை முடிவெடுப்போர் மற்றும் மதிப்பீட்டாளர்களுக்கு பயனுள்ளதாக இருக்கும்.",
+      citizen:
+        "குடிமக்கள் புகார் வகையைத் தேர்வு செய்து, அந்த புகார் தாமதமாகும் வாய்ப்பு உள்ளதா, ஏன் தாமதம் ஏற்படலாம், முதலில் எந்த துறையை அணுக வேண்டும் என்பதைக் காணலாம்.",
+    },
+
+    disclaimer: {
+      title: "முக்கிய குறிப்பு",
+      citizen:
+        "இது BBMP பழைய புகார் தரவின் அடிப்படையில் உருவாக்கப்பட்ட முடிவு-ஆதரவு மாதிரி. இது அதிகாரப்பூர்வ அரசு புகார் பதிவு சேவை அல்ல.",
     },
 
     vacuums: {
