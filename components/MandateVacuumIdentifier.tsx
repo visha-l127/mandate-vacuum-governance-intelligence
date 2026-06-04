@@ -70,6 +70,7 @@ const complaintMetrics: Record<
 
 const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
   const t = translations[language as keyof typeof translations];
+
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryKey>("Drain");
 
@@ -92,6 +93,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-10">
+      {/* Header */}
       <div className="bg-[#1F1F1F] rounded-[3rem] p-10 shadow-xl">
         <h2 className="text-3xl md:text-4xl font-black text-[#9C7A3C] tracking-normal">
           {t.vacuums.title}
@@ -102,6 +104,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
         </p>
       </div>
 
+      {/* Category Selection */}
       <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
         <p className="text-sm font-black tracking-normal text-gray-600 mb-6">
           {t.vacuums.analysisDomain}
@@ -114,7 +117,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               onClick={() => setSelectedCategory(category)}
               className={`rounded-2xl p-4 text-left font-bold transition ${
                 selectedCategory === category
-                  ? "bg-[#9C7A3C] text-white"
+                  ? "bg-[#9C7A3C] text-white shadow-md"
                   : "bg-[#F8F6F0] text-[#3B2A18] hover:bg-[#EFE8D8]"
               }`}
             >
@@ -124,8 +127,10 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
         </div>
       </div>
 
+      {/* Main Analysis */}
       <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
         <div className="grid md:grid-cols-2 gap-10">
+          {/* Left Side */}
           <div className="space-y-8">
             <div>
               <p className="text-sm font-black tracking-normal text-gray-500">
@@ -152,6 +157,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
             </div>
           </div>
 
+          {/* Right Side */}
           <div className="space-y-6">
             <p className="text-lg font-bold italic text-[#3B2A18]">
               {t.common.analyzedSummary}
@@ -173,7 +179,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                   {t.vacuums.primaryDepartment}
                 </p>
 
-                <p className="font-bold">
+                <p className="font-bold text-black">
                   {getDepartmentLabel(current.primaryDept)}
                 </p>
               </div>
@@ -183,7 +189,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                   {t.vacuums.avgResolution}
                 </p>
 
-                <p className="font-bold">
+                <p className="font-bold text-black">
                   {current.avgResolution} {t.citizen.days}
                 </p>
               </div>
@@ -193,7 +199,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                   {t.decay.halfLife}
                 </p>
 
-                <p className="font-bold">
+                <p className="font-bold text-black">
                   {current.halfLife} {t.citizen.days}
                 </p>
               </div>
@@ -203,16 +209,19 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                   {t.vacuums.riskLevel}
                 </p>
 
-                <p className="font-bold">{getRiskLabel(current.risk)}</p>
+                <p className="font-bold text-black">
+                  {getRiskLabel(current.risk)}
+                </p>
               </div>
             </div>
 
-            <div className="bg-[#1F1F1F] rounded-3xl p-6 border border-[#9C7A3C]/30">
-              <p className="text-sm font-black text-[#9C7A3C] mb-2 tracking-normal">
+            {/* Recommendation Card - fixed text color */}
+            <div className="bg-[#1F1F1F] rounded-3xl p-6 border border-[#9C7A3C]/30 shadow-lg">
+              <p className="text-sm font-black text-[#F4D38A] mb-3 tracking-normal">
                 {language === "ta" ? "பரிந்துரை" : "RECOMMENDATION"}
               </p>
 
-              <p className="font-bold text-white leading-relaxed">
+              <p className="font-bold text-white leading-relaxed text-base">
                 {t.common.recommendation}
               </p>
             </div>
