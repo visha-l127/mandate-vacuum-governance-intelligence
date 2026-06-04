@@ -96,6 +96,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
         <h2 className="text-3xl md:text-4xl font-black text-[#9C7A3C] tracking-normal">
           {t.vacuums.title}
         </h2>
+
         <p className="mt-4 text-white/70 font-bold italic tracking-normal">
           {t.vacuums.subtitle}
         </p>
@@ -114,7 +115,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               className={`rounded-2xl p-4 text-left font-bold transition ${
                 selectedCategory === category
                   ? "bg-[#9C7A3C] text-white"
-                  : "bg-[#F8F6F0] text-[#3B2A18]"
+                  : "bg-[#F8F6F0] text-[#3B2A18] hover:bg-[#EFE8D8]"
               }`}
             >
               {getCategoryLabel(category)}
@@ -130,6 +131,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               <p className="text-sm font-black tracking-normal text-gray-500">
                 {t.vacuums.fragmentation}
               </p>
+
               <p className="text-6xl font-black text-[#9C7A3C]">
                 {current.entropy.toFixed(2)}
               </p>
@@ -139,6 +141,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               <p className="text-sm font-black tracking-normal text-gray-500">
                 {t.vacuums.inferenceConfidence}
               </p>
+
               <p className="text-4xl font-black text-black">0.94</p>
             </div>
 
@@ -158,6 +161,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
               <h3 className="text-sm font-black tracking-normal text-gray-600 mb-3">
                 {t.insights.structuralInterpretation}
               </h3>
+
               <p className="text-lg font-bold text-black">
                 {t.common.entropyExplanation}
               </p>
@@ -168,6 +172,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                 <p className="text-xs font-black text-gray-500">
                   {t.vacuums.primaryDepartment}
                 </p>
+
                 <p className="font-bold">
                   {getDepartmentLabel(current.primaryDept)}
                 </p>
@@ -177,6 +182,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                 <p className="text-xs font-black text-gray-500">
                   {t.vacuums.avgResolution}
                 </p>
+
                 <p className="font-bold">
                   {current.avgResolution} {t.citizen.days}
                 </p>
@@ -186,6 +192,7 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                 <p className="text-xs font-black text-gray-500">
                   {t.decay.halfLife}
                 </p>
+
                 <p className="font-bold">
                   {current.halfLife} {t.citizen.days}
                 </p>
@@ -195,12 +202,19 @@ const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
                 <p className="text-xs font-black text-gray-500">
                   {t.vacuums.riskLevel}
                 </p>
+
                 <p className="font-bold">{getRiskLabel(current.risk)}</p>
               </div>
             </div>
 
-            <div className="bg-[#1F1F1F] text-white rounded-3xl p-5">
-              <p className="font-bold">{t.common.recommendation}</p>
+            <div className="bg-[#1F1F1F] rounded-3xl p-6 border border-[#9C7A3C]/30">
+              <p className="text-sm font-black text-[#9C7A3C] mb-2 tracking-normal">
+                {language === "ta" ? "பரிந்துரை" : "RECOMMENDATION"}
+              </p>
+
+              <p className="font-bold text-white leading-relaxed">
+                {t.common.recommendation}
+              </p>
             </div>
           </div>
         </div>
