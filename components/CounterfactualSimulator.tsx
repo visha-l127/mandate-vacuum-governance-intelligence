@@ -1,145 +1,171 @@
-import React, { useState } from 'react';
-import { simulateCounterfactualOutcome } from '../services/geminiService';
-import { Language } from '../types';
-import { COMPLAINT_JOURNEYS } from '../constants';
+import React, { useState } from "react";
+import { translations } from "../data/translations";
+import { Language } from "../types";
 
-interface Props { language: Language; }
+interface Props {
+  language: Language;
+}
+
+type ScenarioKey = "drainWaste" | "publicToilet" | "sidewalkDebris";
 
 const CounterfactualSimulator: React.FC<Props> = ({ language }) => {
-  const [selected, setSelected] = useState<any>(null);
-  const [sim, setSim] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const t = translations[language as keyof typeof translations];
+  const [selectedScenario, setSelectedScenario] =
+    useState<ScenarioKey>("publicToilet");
 
-  const t = {
-    inputs: language === 'ta' ? 'உருவகப்படுத்துதல் உள்ளீடுகள்' : 'Simulation Inputs',
-    init: language === 'ta' ? 'தொடங்கவும்' : 'Select a complaint to simulate',
-    actual: language === 'ta' ? 'உண்மையான முடிவு' : 'Actual Outcome',
-    simulated: language === 'ta' ? 'உருவகப்படுத்தப்பட்ட' : 'Simulated',
-    gain: language === 'ta' ? 'அதிகரிப்பு' : 'Efficiency Gain',
-    pattern: language === 'ta' ? 'மாதிரி' : 'Pattern',
-    issue: language === 'ta' ? 'சிக்கல்' : 'Issue',
-    rec: language === 'ta' ? 'பரிந்துரை' : 'Recommendation',
-  };
-
-  const runSimulation = async (journey: any) => {
-    setSelected(journey);
-    setLoading(true);
-    setSim(null);
-    try {
-      const res = await simulateCounterfactualOutcome(journey, language);
-      setSim(res);
-    } catch (e) {
-      console.error(e);
-      setSim(null);
-    } finally {
-      setLoading(false);
+  const scenarios: Record<
+    ScenarioKey,
+    {
+      label: string;
+      departments: number;
+      baseline: string;
+      optimized: string;
+      improvement: string;
     }
+  > = {
+    drainWaste: {
+      label: t.simulatorCases.drainWaste,
+      departments: 3,
+      baseline: "48h",
+      optimized: "22h",
+      improvement: "55%",
+    },
+    publicToilet: {
+      label: t.simulatorCases.publicToilet,
+      departments: 4,
+      baseline: "49h",
+      optimized: "22h",
+      improvement: "55%",
+    },
+    sidewalkDebris: {
+      label: t.simulatorCases.sidewalkDebris,
+      departments: 3,
+      baseline: "35h",
+      optimized: "16h",
+      improvement: "54%",
+    },
   };
 
-  if (!COMPLAINT_JOURNEYS || COMPLAINT_JOURNEYS.length === 0) {
-    return <div className="text-center py-20 text-gray-500">No data available</div>;
-  }
+  const current = scenarios[selectedScenario];
 
   return (
-    <div className="max-w-[1440px] mx-auto animate-in fade-in duration-700 pb-20">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-4 space-y-6">
-          <h3 className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.4em] px-4">{t.inputs}</h3>
-          {COMPLAINT_JOURNEYS.map((j: any) => (
-            <button 
-              key={j.ticketId}
-              onClick={() => runSimulation(j)}
-              className={`w-full text-left p-8 rounded-[2.5rem] border transition-all ${
-                selected?.ticketId === j.ticketId 
-                  ? 'bg-[#1E1E1E] border-slate-800 text-white shadow-xl' 
-                  : 'bg-white border-slate-100 hover:border-slate-300'
+    <div className="max-w-6xl mx-auto space-y-10">
+      <div>
+        <p className="text-sm font-black tracking-normal text-gray-700 mb-6">
+          {t.simulator.inputs}
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-5">
+          {(Object.keys(scenarios) as ScenarioKey[]).map((key) => (
+            <button
+              key={key}
+              onClick={() => setSelectedScenario(key)}
+              className={`rounded-3xl p-6 text-left font-black transition ${
+                selectedScenario === key
+                  ? "bg-[#1F1F1F] text-[#9C7A3C] shadow-xl"
+                  : "bg-white text-[#3B2A18] border border-[#9C7A3C]/10"
               }`}
             >
-              <h4 className={`font-black text-sm uppercase tracking-tight ${
-                selected?.ticketId === j.ticketId ? 'text-[#9C7A3C]' : 'text-[#5A4628]'
-              }`}>
-                {j.category || 'Unknown'}
-              </h4>
+              {scenarios[key].label}
             </button>
           ))}
         </div>
+      </div>
 
-        <div className="lg:col-span-8">
-          {!selected ? (
-            <div className="bg-white border-2 border-dashed border-slate-100 h-[600px] rounded-[4rem] flex flex-col items-center justify-center text-center p-20 opacity-60">
-              <p className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-tight">{t.init}</p>
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
+          <h3 className="text-xl font-black text-[#9C7A3C] mb-6 tracking-normal">
+            {t.simulator.before}
+          </h3>
+
+          <div className="space-y-5">
+            <div>
+              <p className="text-sm font-bold text-gray-500">
+                {t.simulator.baselineResolution}
+              </p>
+              <p className="text-5xl font-black text-black">
+                {current.baseline}
+              </p>
             </div>
-          ) : (
-            <div className="space-y-10 animate-in slide-in-from-bottom-8 duration-700">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white border border-slate-100 rounded-[3.5rem] p-12 shadow-sm">
-                  <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-[0.4em] mb-8">{t.actual}</div>
-                  <div className="text-5xl font-black text-[#1E1E1E]">
-                    {selected?.metrics?.totalDurationHours ?? 210}h
-                  </div>
-                </div>
 
-                <div className="bg-[#1E1E1E] text-white rounded-[3.5rem] p-12 shadow-2xl ring-4 ring-slate-800">
-                  <div className="text-[9px] font-black text-[#9C7A3C] uppercase tracking-[0.4em] mb-8">{t.simulated}</div>
-                  {loading ? (
-                    <div className="animate-pulse h-12 w-full bg-white/5 rounded-xl"></div>
-                  ) : sim ? (
-                    <div className="text-5xl font-black text-[#9C7A3C]">
-                      {sim?.simulatedOutcome?.totalHours ?? 0}h
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              {sim && (
-                <div className="bg-white border border-slate-100 rounded-[4rem] p-16 shadow-2xl">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-[#F4F3EE] pb-12 mb-12">
-                    <div className="col-span-1">
-                      <div className="text-[10px] font-black text-[#9C7A3C] uppercase tracking-[0.5em] mb-2">{t.gain}</div>
-                      <div className="text-7xl font-black text-[#1E1E1E] tracking-tighter">
-                        {sim?.improvement?.timeReductionPercentage ?? 0}%
-                      </div>
-                    </div>
-                    <div className="col-span-2">
-                      <div className={`inline-block px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border mb-4 ${
-                        (sim?.failureClassification ?? '').includes('Structural') 
-                          ? 'bg-rose-50 text-[#7B2D2D] border-[#7B2D2D]/10' 
-                          : 'bg-slate-50 text-slate-400 border-slate-200'
-                      }`}>
-                        {sim?.failureClassification ?? 'Unknown'}
-                      </div>
-                      <p className="text-xl font-black text-[#5A4628] leading-tight italic">
-                        {sim?.structuralInterpretation ?? 'Analyzing...'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-10">
-                    <div className="space-y-3">
-                      <label className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-widest">{t.pattern}:</label>
-                      <p className="text-base font-bold text-[#1E1E1E] leading-relaxed italic">
-                        {sim?.observedPattern ?? 'N/A'}
-                      </p>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[9px] font-black text-[#7B2D2D] uppercase tracking-widest">{t.issue}:</label>
-                      <p className="text-sm font-black text-[#7B2D2D] leading-relaxed uppercase tracking-tight">
-                        {sim?.mandateAccountabilityIssue ?? 'N/A'}
-                      </p>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[9px] font-black text-[#9C7A3C] uppercase tracking-widest">{t.rec}:</label>
-                      <div className="p-8 bg-[#F4F3EE] rounded-[2rem] border border-slate-100">
-                        <p className="text-sm font-bold text-[#5A4628] leading-relaxed uppercase tracking-widest">
-                          {sim?.governanceRecommendation ?? 'N/A'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+            <div>
+              <p className="text-sm font-bold text-gray-500">
+                {t.common.departments}
+              </p>
+              <p className="text-5xl font-black text-black">
+                {current.departments}
+              </p>
             </div>
-          )}
+
+            <p className="font-bold italic text-[#8B2F2F]">
+              {t.simulatorCases.reasonText}
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-[#1F1F1F] rounded-[3rem] p-8 shadow-xl">
+          <h3 className="text-xl font-black text-[#9C7A3C] mb-6 tracking-normal">
+            {t.simulator.after}
+          </h3>
+
+          <div className="space-y-5 text-white">
+            <div>
+              <p className="text-sm font-bold text-white/60">
+                {t.simulator.optimizedResolution}
+              </p>
+              <p className="text-5xl font-black">{current.optimized}</p>
+            </div>
+
+            <div>
+              <p className="text-sm font-bold text-white/60">
+                {t.simulator.improvement}
+              </p>
+              <p className="text-5xl font-black text-[#9C7A3C]">
+                {current.improvement}
+              </p>
+            </div>
+
+            <p className="font-bold italic text-white/90">
+              {t.common.recommendation}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <p className="text-sm font-black text-[#9C7A3C] tracking-normal">
+              {t.common.structuralMandateVacuum}
+            </p>
+            <h3 className="mt-3 text-2xl font-black italic text-[#3B2A18]">
+              {t.simulatorCases.entropyText}
+            </h3>
+          </div>
+
+          <div className="text-6xl font-black text-black">
+            {current.improvement}
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 mt-8 pt-8 space-y-5">
+          <div>
+            <p className="text-sm font-bold text-[#9C7A3C]">
+              {t.common.reason}:
+            </p>
+            <p className="font-bold italic text-black">
+              {t.simulatorCases.reasonText}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm font-bold text-[#8B2F2F]">
+              {t.common.risk}:
+            </p>
+            <p className="font-black text-[#8B2F2F]">
+              {t.simulatorCases.riskText}
+            </p>
+          </div>
         </div>
       </div>
     </div>

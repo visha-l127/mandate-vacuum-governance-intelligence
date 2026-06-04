@@ -1,118 +1,209 @@
-import React, { useState, useEffect } from 'react';
-import { identifyMandateVacuums } from '../services/geminiService';
-import { Language } from '../types';
+import React, { useState } from "react";
+import { translations } from "../data/translations";
+import { Language } from "../types";
 
-interface Props { language: Language; }
+interface Props {
+  language: Language;
+}
+
+type CategoryKey =
+  | "Electrical"
+  | "Drain"
+  | "Solid Waste"
+  | "Road Maintenance"
+  | "Forest"
+  | "Health";
+
+const complaintMetrics: Record<
+  CategoryKey,
+  {
+    entropy: number;
+    halfLife: number;
+    primaryDept: string;
+    avgResolution: number;
+    risk: "HIGH" | "MEDIUM" | "LOW";
+  }
+> = {
+  Electrical: {
+    entropy: 0.98,
+    halfLife: 33.9,
+    primaryDept: "Electrical Dept",
+    avgResolution: 9,
+    risk: "HIGH",
+  },
+  Drain: {
+    entropy: 0.91,
+    halfLife: 28.9,
+    primaryDept: "Drainage Dept",
+    avgResolution: 48,
+    risk: "HIGH",
+  },
+  "Solid Waste": {
+    entropy: 0.99,
+    halfLife: 34.1,
+    primaryDept: "Sanitation Dept",
+    avgResolution: 35,
+    risk: "HIGH",
+  },
+  "Road Maintenance": {
+    entropy: 1.0,
+    halfLife: 33.9,
+    primaryDept: "PWD",
+    avgResolution: 34,
+    risk: "HIGH",
+  },
+  Forest: {
+    entropy: 0.98,
+    halfLife: 28.9,
+    primaryDept: "Parks Dept",
+    avgResolution: 31,
+    risk: "HIGH",
+  },
+  Health: {
+    entropy: 1.0,
+    halfLife: 38.1,
+    primaryDept: "Health Dept",
+    avgResolution: 38,
+    risk: "HIGH",
+  },
+};
 
 const MandateVacuumIdentifier: React.FC<Props> = ({ language }) => {
-  const [vacuums, setVacuums] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const t = translations[language as keyof typeof translations];
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryKey>("Drain");
 
-  useEffect(() => {
-    identifyMandateVacuums(language)
-      .then((data: any) => setVacuums(Array.isArray(data) ? data : []))
-      .catch(() => setVacuums([]))
-      .finally(() => setLoading(false));
-  }, [language]);
+  const current = complaintMetrics[selectedCategory];
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center py-48">
-      <div className="w-10 h-10 border-2 border-slate-900 border-t-transparent rounded-full animate-spin mb-6"></div>
-      <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#6A6A6A]">
-        {language === 'ta' ? 'வெற்றிடங்களைக் கண்டறிதல்...' : 'Identifying Vacuums...'}
-      </p>
-    </div>
-  );
+  const getCategoryLabel = (category: string) => {
+    const categoryMap = t.categories as Record<string, string>;
+    return categoryMap[category] || category;
+  };
+
+  const getDepartmentLabel = (department: string) => {
+    const departmentMap = t.departments as Record<string, string>;
+    return departmentMap[department] || department;
+  };
+
+  const getRiskLabel = (risk: string) => {
+    const riskMap = t.risk as Record<string, string>;
+    return riskMap[risk] || risk;
+  };
 
   return (
-    <div className="space-y-12 max-w-[1200px] mx-auto animate-in fade-in duration-1000 pb-20">
-      <header className="bg-[#1E1E1E] text-white p-10 rounded-[3rem] shadow-2xl">
-        <h3 className="text-3xl font-black tracking-tighter uppercase mb-3 text-[#9C7A3C]">
-          {language === 'ta' ? 'ஆணை வெற்றிடப் பதிவேடு' : 'Mandate Vacuum Registry'}
-        </h3>
-        <p className="text-xs font-bold text-[#6A6A6A] uppercase tracking-widest italic opacity-80">
-          {language === 'ta' ? 'தெளிவான நிர்வாக உரிமை இல்லாத புகார் வகைகளை கண்டறிதல்.' : 'Structural identification of complaint categories with zero consistent administrative ownership.'}
+    <div className="max-w-6xl mx-auto space-y-10">
+      <div className="bg-[#1F1F1F] rounded-[3rem] p-10 shadow-xl">
+        <h2 className="text-3xl md:text-4xl font-black text-[#9C7A3C] tracking-normal">
+          {t.vacuums.title}
+        </h2>
+        <p className="mt-4 text-white/70 font-bold italic tracking-normal">
+          {t.vacuums.subtitle}
         </p>
-      </header>
+      </div>
 
-      <div className="space-y-10">
-        {vacuums.map((v: any, i: number) => (
-          <div key={i} className="bg-white border border-slate-100 rounded-[3rem] p-12 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-12 hover:shadow-md transition-all">
-            <div className="lg:col-span-4 space-y-4">
-              <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">
-                {language === 'ta' ? 'ஆய்வுத் துறை' : 'Analysis Domain'}
-              </div>
-              <h4 className="text-2xl font-black text-[#5A4628] uppercase tracking-tighter leading-none">{v.category}</h4>
-              <div className={`inline-block px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${
-                (v.failureClassification ?? '').includes('Structural')
-                  ? 'bg-rose-50 text-[#7B2D2D] border-[#7B2D2D]/10'
-                  : 'bg-slate-50 text-slate-400 border-slate-200'
-              }`}>
-                {v.failureClassification ?? 'Unknown'}
-              </div>
-              <div className="pt-4">
-                <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-widest opacity-40 mb-1">
-                  {language === 'ta' ? 'அனுமான நம்பிக்கை' : 'Inference Confidence'}
-                </div>
-                <div className="text-lg font-black text-[#5A4628]">
-                  {typeof v.confidenceLevel === 'number' ? v.confidenceLevel.toFixed(2) : 'N/A'}
-                </div>
-              </div>
+      <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
+        <p className="text-sm font-black tracking-normal text-gray-600 mb-6">
+          {t.vacuums.analysisDomain}
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          {(Object.keys(complaintMetrics) as CategoryKey[]).map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`rounded-2xl p-4 text-left font-bold transition ${
+                selectedCategory === category
+                  ? "bg-[#9C7A3C] text-white"
+                  : "bg-[#F8F6F0] text-[#3B2A18]"
+              }`}
+            >
+              {getCategoryLabel(category)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-[3rem] p-8 border border-[#9C7A3C]/10 shadow-sm">
+        <div className="grid md:grid-cols-2 gap-10">
+          <div className="space-y-8">
+            <div>
+              <p className="text-sm font-black tracking-normal text-gray-500">
+                {t.vacuums.fragmentation}
+              </p>
+              <p className="text-6xl font-black text-[#9C7A3C]">
+                {current.entropy.toFixed(2)}
+              </p>
             </div>
 
-            <div className="lg:col-span-8 space-y-8 border-l border-[#F4F3EE] lg:pl-16">
-              {v.observedPattern && (
-                <div className="space-y-2">
-                  <div className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.3em]">
-                    {language === 'ta' ? 'கவனிக்கப்பட்ட மாதிரி' : 'Observed Pattern'}:
-                  </div>
-                  <p className="text-base font-bold text-[#1E1E1E] leading-relaxed italic">"{v.observedPattern}"</p>
-                </div>
-              )}
-              {v.structuralInterpretation && (
-                <div className="space-y-2">
-                  <div className="text-[10px] font-black text-[#6A6A6A] uppercase tracking-[0.3em]">
-                    {language === 'ta' ? 'கட்டமைப்பு விளக்கம்' : 'Structural Interpretation'}:
-                  </div>
-                  <p className="text-sm font-bold text-[#1E1E1E] leading-relaxed italic opacity-90">{v.structuralInterpretation}</p>
-                </div>
-              )}
-              {v.mandateAccountabilityIssue && (
-                <div className="space-y-2">
-                  <div className="text-[10px] font-black text-[#7B2D2D] uppercase tracking-[0.3em]">
-                    {language === 'ta' ? 'ஆணை / பொறுப்புக்கூறல் சிக்கல்' : 'Mandate / Accountability Issue'}:
-                  </div>
-                  <p className="text-sm font-black text-[#7B2D2D] leading-relaxed uppercase tracking-tight">{v.mandateAccountabilityIssue}</p>
-                </div>
-              )}
-              {Array.isArray(v.evidenceBasis) && v.evidenceBasis.length > 0 && (
-                <div className="bg-[#F4F3EE]/30 p-6 rounded-3xl space-y-3">
-                  <div className="text-[9px] font-black text-[#6A6A6A] uppercase tracking-[0.4em]">
-                    {language === 'ta' ? 'ஆதார அடிப்படை' : 'Evidence Basis'}:
-                  </div>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {v.evidenceBasis.map((point: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2 text-[9px] font-bold text-[#6A6A6A] uppercase tracking-tight">
-                        <span className="w-1 h-1 rounded-full bg-[#9C7A3C] mt-1 shrink-0" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {v.governanceRecommendation && (
-                <div className="space-y-2 pt-4 border-t border-[#F4F3EE]">
-                  <div className="text-[10px] font-black text-[#9C7A3C] uppercase tracking-[0.3em]">
-                    {language === 'ta' ? 'ஆட்சிமுறை பரிந்துரை' : 'Governance Recommendation'}:
-                  </div>
-                  <div className="bg-[#F4F3EE]/50 border border-slate-100 p-6 rounded-[2rem]">
-                    <p className="text-sm font-bold text-[#5A4628] leading-relaxed uppercase tracking-tight italic">{v.governanceRecommendation}</p>
-                  </div>
-                </div>
-              )}
+            <div>
+              <p className="text-sm font-black tracking-normal text-gray-500">
+                {t.vacuums.inferenceConfidence}
+              </p>
+              <p className="text-4xl font-black text-black">0.94</p>
+            </div>
+
+            <div>
+              <span className="inline-block rounded-full bg-red-50 text-red-800 px-4 py-2 text-xs font-black">
+                {getRiskLabel(current.risk)}
+              </span>
             </div>
           </div>
-        ))}
+
+          <div className="space-y-6">
+            <p className="text-lg font-bold italic text-[#3B2A18]">
+              {t.common.analyzedSummary}
+            </p>
+
+            <div className="bg-[#F8F6F0] rounded-3xl p-6">
+              <h3 className="text-sm font-black tracking-normal text-gray-600 mb-3">
+                {t.insights.structuralInterpretation}
+              </h3>
+              <p className="text-lg font-bold text-black">
+                {t.common.entropyExplanation}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white border border-[#9C7A3C]/20 rounded-2xl p-4">
+                <p className="text-xs font-black text-gray-500">
+                  {t.vacuums.primaryDepartment}
+                </p>
+                <p className="font-bold">
+                  {getDepartmentLabel(current.primaryDept)}
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#9C7A3C]/20 rounded-2xl p-4">
+                <p className="text-xs font-black text-gray-500">
+                  {t.vacuums.avgResolution}
+                </p>
+                <p className="font-bold">
+                  {current.avgResolution} {t.citizen.days}
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#9C7A3C]/20 rounded-2xl p-4">
+                <p className="text-xs font-black text-gray-500">
+                  {t.decay.halfLife}
+                </p>
+                <p className="font-bold">
+                  {current.halfLife} {t.citizen.days}
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#9C7A3C]/20 rounded-2xl p-4">
+                <p className="text-xs font-black text-gray-500">
+                  {t.vacuums.riskLevel}
+                </p>
+                <p className="font-bold">{getRiskLabel(current.risk)}</p>
+              </div>
+            </div>
+
+            <div className="bg-[#1F1F1F] text-white rounded-3xl p-5">
+              <p className="font-bold">{t.common.recommendation}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
