@@ -6,6 +6,16 @@
 
 ---
 
+## Full-Stack Version
+
+This repository contains the original deployed analytical dashboard.
+
+A newer full-stack version with Spring Boot, Oracle Database, REST APIs, and complaint persistence is available here:
+
+[Mandate Vacuum Full-Stack Repository](https://github.com/visha-l127/mandate-vacuum-fullstack)
+
+---
+
 ## The Problem
 
 Complaints bounce between departments. 6 weeks later: unresolved. No one owns it.
