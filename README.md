@@ -6,13 +6,20 @@
 
 ---
 
-## Full-Stack Version
 
-This repository contains the original deployed analytical dashboard.
+## Full-Stack Version Available
 
-A newer full-stack version with Spring Boot, Oracle Database, REST APIs, and complaint persistence is available here:
+This repository contains the original deployed analytical dashboard of Mandate Vacuum.
 
-[Mandate Vacuum Full-Stack Repository](https://github.com/visha-l127/mandate-vacuum-fullstack)
+A newer full-stack version has been developed with:
+
+* Spring Boot REST APIs
+* Oracle Database
+* Citizen complaint persistence
+* Recent request history
+* Full-stack proof screenshots
+
+Full-stack repository: [Mandate Vacuum Full-Stack](https://github.com/visha-l127/mandate-vacuum-fullstack)
 
 ---
 
